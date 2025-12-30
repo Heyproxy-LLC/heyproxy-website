@@ -6,39 +6,39 @@
     
     <!-- Homepage -->
     <url>
-        <loc>https://heyproxy.com/</loc>
+        <loc>https://heyproxy.io/</loc>
         <lastmod>2025-12-30</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
     </url>
-    
+
     <!-- Services Section -->
     <url>
-        <loc>https://heyproxy.com/#services</loc>
+        <loc>https://heyproxy.io/#services</loc>
         <lastmod>2025-12-30</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
-    
+
     <!-- Tech Stack Section -->
     <url>
-        <loc>https://heyproxy.com/#tech-stack</loc>
+        <loc>https://heyproxy.io/#tech-stack</loc>
         <lastmod>2025-12-30</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
-    
+
     <!-- Why Us Section -->
     <url>
-        <loc>https://heyproxy.com/#why-us</loc>
+        <loc>https://heyproxy.io/#why-us</loc>
         <lastmod>2025-12-30</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
-    
+
     <!-- Contact Section -->
     <url>
-        <loc>https://heyproxy.com/#contact</loc>
+        <loc>https://heyproxy.io/#contact</loc>
         <lastmod>2025-12-30</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>

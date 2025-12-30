@@ -69,6 +69,6 @@ The website includes:
 
 ## Contact
 
-- Email: hello@heyproxy.com
-- Website: https://heyproxy.com
+- Email: hello@heyproxy.io
+- Website: https://heyproxy.io
 

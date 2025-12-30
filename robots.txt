@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://heyproxy.com/sitemap.xml
+Sitemap: https://heyproxy.io/sitemap.xml
 
