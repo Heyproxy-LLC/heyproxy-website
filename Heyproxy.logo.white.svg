@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 423.43 86.24">
+  <defs>
+    <style>
+      .cls-1 {
+        font-family: Raleway-Regular, Raleway;
+        font-size: 80px;
+      }
+
+      .cls-2 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-2, .cls-3, .cls-4 {
+        fill: #fff;
+      }
+
+      .cls-3 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-5 {
+        fill: aqua;
+      }
+    </style>
+  </defs>
+  <text class="cls-1" transform="translate(0 68.4)"><tspan class="cls-4" x="0" y="0">HEYPR</tspan><tspan class="cls-3" x="261.84" y="0">O</tspan><tspan class="cls-5" x="319.36" y="0">X</tspan><tspan class="cls-2" x="369.92" y="0">Y</tspan></text>
+</svg>
