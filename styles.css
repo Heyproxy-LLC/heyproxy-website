@@ -21,6 +21,7 @@
 html {
     scroll-behavior: smooth;
     overflow-x: hidden;
+    height: -webkit-fill-available;
 }
 
 body {
@@ -1088,6 +1089,8 @@ h1, h2, h3, h4, h5, h6 {
         padding-top: 5rem;
         padding-bottom: 2rem;
         min-height: 100vh;
+        min-height: -webkit-fill-available;
+        min-height: -moz-available;
     }
 
     .hero-label {
