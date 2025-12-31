@@ -1085,9 +1085,13 @@ h1, h2, h3, h4, h5, h6 {
     }
 
     .hero-section {
-        padding-top: 3rem;
+        padding-top: 5rem;
         padding-bottom: 2rem;
         min-height: 100vh;
+    }
+
+    .hero-content {
+        margin-top: -2rem;
     }
 
     .hero-label {
