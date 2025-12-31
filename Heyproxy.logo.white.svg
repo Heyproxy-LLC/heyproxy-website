@@ -2,9 +2,12 @@
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 423.43 86.24">
   <defs>
     <style>
+      @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&amp;display=block');
+
       .cls-1 {
-        font-family: Raleway-Regular, Raleway;
+        font-family: 'Raleway', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
         font-size: 80px;
+        font-weight: 400;
       }
 
       .cls-2 {
@@ -20,7 +23,7 @@
       }
 
       .cls-5 {
-        fill: aqua;
+        fill: #00ffff;
       }
     </style>
   </defs>
