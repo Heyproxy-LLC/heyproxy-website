@@ -276,6 +276,7 @@ h1, h2, h3, h4, h5, h6 {
     flex-direction: column;
     text-align: center;
     padding-top: 12rem;
+    padding-bottom: 4rem;
     position: relative;
 }
 
@@ -1079,12 +1080,37 @@ h1, h2, h3, h4, h5, h6 {
         height: 32px;
     }
 
+    .section {
+        padding: 6rem 2rem;
+    }
+
     .hero-section {
-        padding-top: 10rem;
+        padding-top: 8rem;
+        padding-bottom: 3rem;
+        min-height: 100vh;
+    }
+
+    .hero-label {
+        font-size: 0.7rem;
+        letter-spacing: 2px;
+        margin-bottom: 2rem;
+    }
+
+    .hero-title {
+        font-size: clamp(2rem, 10vw, 3rem);
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-description {
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 2.5rem;
+        padding: 0 1rem;
     }
 
     .hero-social-links {
         gap: 1rem;
+        margin-top: 2rem;
     }
 
     .hero-social-icon {
