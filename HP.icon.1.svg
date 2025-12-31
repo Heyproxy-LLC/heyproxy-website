@@ -3,10 +3,10 @@
   <defs>
     <style>
       .cls-1 {
-        fill: #00ffff;
-        stroke: none;
+        fill: aqua;
+        stroke: #000;
         stroke-miterlimit: 10;
-        stroke-width: 0px;
+        stroke-width: 3px;
       }
     </style>
   </defs>
