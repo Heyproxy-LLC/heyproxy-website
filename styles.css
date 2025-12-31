@@ -24,7 +24,7 @@ html {
 }
 
 body {
-    font-family: 'Raleway', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
     background-color: var(--dark);
     color: var(--text-primary);
     line-height: 1.6;
@@ -34,7 +34,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Raleway', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Raleway', 'Poppins', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
     font-weight: 700;
 }
 
@@ -1073,6 +1073,10 @@ h1, h2, h3, h4, h5, h6 {
     .nav-cta {
         padding: 0.6rem 1.25rem;
         font-size: 0.85rem;
+    }
+
+    .logo-img {
+        height: 24px;
     }
 
     .hero-section {
