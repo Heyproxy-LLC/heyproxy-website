@@ -697,7 +697,6 @@ body {
     gap: 2rem;
     max-width: 1400px;
     width: 100%;
-    margin-top: 3rem;
 }
 
 .tech-stat-card {
@@ -1038,6 +1037,10 @@ body {
     .btn-primary,
     .btn-secondary {
         width: 100%;
+    }
+
+    .section-header {
+        margin-bottom: 4rem;
     }
 
     .service-card {
