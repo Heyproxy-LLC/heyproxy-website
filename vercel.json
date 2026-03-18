@@ -18,12 +18,46 @@
     {
       "source": "/SearchIQ.html",
       "destination": "/",
-      "permanent": false
+      "permanent": false,
+      "has": [
+        {
+          "type": "host",
+          "value": "heyproxy.io"
+        }
+      ]
+    },
+    {
+      "source": "/SearchIQ.html",
+      "destination": "/",
+      "permanent": false,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.heyproxy.io"
+        }
+      ]
     },
     {
       "source": "/SearchIQ",
       "destination": "/",
-      "permanent": false
+      "permanent": false,
+      "has": [
+        {
+          "type": "host",
+          "value": "heyproxy.io"
+        }
+      ]
+    },
+    {
+      "source": "/SearchIQ",
+      "destination": "/",
+      "permanent": false,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.heyproxy.io"
+        }
+      ]
     }
   ]
 }
