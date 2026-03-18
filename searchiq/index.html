@@ -528,19 +528,19 @@
   }
 
   .score-summary p {
-    font-size: 13px;
+    font-size: 15px;
     color: var(--text-mid);
-    line-height: 1.6;
+    line-height: 1.7;
   }
 
   /* ── RESULT BLOCKS ── */
   .result-section {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
   }
 
   .result-section-title {
     font-family: 'Poppins', monospace;
-    font-size: 9px;
+    font-size: 11px;
     letter-spacing: 2.5px;
     text-transform: uppercase;
     color: var(--aqua);
@@ -560,10 +560,10 @@
   .result-block {
     background: var(--dark-2);
     border: 1px solid var(--border-dim);
-    padding: 20px 24px;
+    padding: 24px 28px;
     font-family: 'Poppins', monospace;
-    font-size: 12px;
-    line-height: 1.9;
+    font-size: 14px;
+    line-height: 2;
     color: var(--text-mid);
     white-space: pre-wrap;
   }
@@ -575,11 +575,11 @@
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    padding: 10px 0;
+    padding: 14px 0;
     border-bottom: 1px solid var(--border-dim);
     font-family: 'Poppins', monospace;
-    font-size: 12px;
-    line-height: 1.5;
+    font-size: 14px;
+    line-height: 1.6;
   }
 
   .check-item:last-child { border-bottom: none; }
@@ -590,7 +590,7 @@
   .check-warn { color: var(--yellow); }
 
   .check-label { color: var(--text); flex: 1; }
-  .check-note { color: var(--text-dim); font-size: 11px; margin-top: 2px; }
+  .check-note { color: var(--text-dim); font-size: 13px; margin-top: 2px; }
 
   /* Priority fixes */
   .fix-item {
@@ -616,14 +616,14 @@
 
   .fix-content { flex: 1; }
   .fix-title {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 700;
     color: var(--text);
-    margin-bottom: 4px;
+    margin-bottom: 6px;
   }
   .fix-desc {
     font-family: 'Poppins', monospace;
-    font-size: 11px;
+    font-size: 13px;
     color: var(--text-dim);
     line-height: 1.7;
   }
@@ -1237,14 +1237,14 @@ QUICK WINS
 
     // CTA to other tools
     html += `
-      <div style="background: var(--dark-2); border: 1px solid var(--border); padding: 24px 28px; margin-top: 8px; display: flex; align-items: center; justify-content: space-between; flex-wrap: gap;">
-        <div>
-          <div style="font-size:15px; font-weight:700; margin-bottom:4px;">Ready to optimize?</div>
-          <div style="font-family:'Space Mono',monospace; font-size:11px; color:var(--text-dim);">Use the Keyword Analyzer and Meta Generator to start fixing your top issues.</div>
+      <div style="background: var(--dark-2); border: 1px solid var(--border); padding: 28px 32px; margin-top: 12px; border-radius: 4px;">
+        <div style="margin-bottom: 20px;">
+          <div style="font-size:18px; font-weight:700; margin-bottom:8px; color: var(--text);">Ready to optimize?</div>
+          <div style="font-family:'Poppins',sans-serif; font-size:14px; color:var(--text-mid); line-height: 1.6;">Use the Keyword Analyzer and Meta Generator to start fixing your top issues.</div>
         </div>
-        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
-          <button class="btn btn-outline" style="font-size:10px; padding:10px 20px;" onclick="switchTab('keyword', document.getElementById('tab-keyword'))">Keyword Analyzer →</button>
-          <button class="btn" style="font-size:10px; padding:10px 20px;" onclick="switchTab('meta', document.getElementById('tab-meta'))">Meta Generator →</button>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <button class="btn" style="font-size:12px; padding:14px 28px; font-weight: 700; letter-spacing: 1.5px;" onclick="switchTab('keyword', document.getElementById('tab-keyword'))">KEYWORD ANALYZER →</button>
+          <button class="btn" style="font-size:12px; padding:14px 28px; font-weight: 700; letter-spacing: 1.5px;" onclick="switchTab('meta', document.getElementById('tab-meta'))">META GENERATOR →</button>
         </div>
       </div>`;
 
