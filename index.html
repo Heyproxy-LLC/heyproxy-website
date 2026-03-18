@@ -39,6 +39,13 @@
 
     <link rel="stylesheet" href="styles.css">
 
+    <!-- Subdomain Router -->
+    <script>
+        if (window.location.hostname === 'searchiq.heyproxy.io') {
+            window.location.replace('/searchiq/index.html');
+        }
+    </script>
+
     <!-- Structured Data -->
     <script type="application/ld+json">
     {
