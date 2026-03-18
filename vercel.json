@@ -5,7 +5,7 @@
   "rewrites": [
     {
       "source": "/:path*",
-      "destination": "/SearchIQ.html",
+      "destination": "/searchiq/index.html",
       "has": [
         {
           "type": "host",
