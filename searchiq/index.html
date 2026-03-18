@@ -995,30 +995,25 @@
 
 <script>
   // ── CONFIG ──
-  // Replace with your actual Anthropic API key
-  const API_KEY = 'YOUR_API_KEY_HERE';
   let currentDomain = '';
 
   // ── HELPERS ──
   async function callClaude(prompt, maxTokens = 1800) {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    // Call our serverless API route instead of Anthropic directly
+    const res = await fetch('/api/claude', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': API_KEY,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: maxTokens,
-        messages: [{ role: 'user', content: prompt }]
+        prompt: prompt,
+        maxTokens: maxTokens
       })
     });
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      throw new Error(err.error?.message || `API error ${res.status}`);
+      throw new Error(err.error || `API error ${res.status}`);
     }
 
     const data = await res.json();
