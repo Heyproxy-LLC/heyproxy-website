@@ -8,16 +8,21 @@
 <style>
   :root {
     --aqua: #00ffff;
-    --aqua-dim: rgba(0,255,255,0.12);
-    --aqua-glow: rgba(0,255,255,0.4);
-    --dark: #0a0a0a;
-    --dark-2: #111111;
-    --dark-3: #1a1a1a;
-    --dark-4: #222222;
-    --text: #e8e8e8;
-    --text-dim: #888;
-    --border: rgba(0,255,255,0.15);
-    --radius: 4px;
+    --aqua-dim: rgba(0,255,255,0.08);
+    --aqua-mid: rgba(0,255,255,0.2);
+    --aqua-glow: rgba(0,255,255,0.35);
+    --dark: #080808;
+    --dark-2: #0f0f0f;
+    --dark-3: #161616;
+    --dark-4: #1e1e1e;
+    --text: #ececec;
+    --text-dim: #666;
+    --text-mid: #999;
+    --border: rgba(0,255,255,0.12);
+    --border-dim: rgba(255,255,255,0.06);
+    --yellow: #ffc800;
+    --red: #ff4f4f;
+    --green: #00ff88;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -30,124 +35,314 @@
     overflow-x: hidden;
   }
 
-  /* Grid background */
   body::before {
     content: '';
     position: fixed;
     inset: 0;
-    background-image: 
-      linear-gradient(rgba(0,255,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,255,255,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
+    background-image:
+      linear-gradient(rgba(0,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,255,0.025) 1px, transparent 1px);
+    background-size: 48px 48px;
     pointer-events: none;
     z-index: 0;
   }
 
-  .container {
-    max-width: 960px;
+  .wrap {
+    max-width: 900px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 24px 80px;
     position: relative;
     z-index: 1;
   }
 
-  /* Header */
+  /* ── HEADER ── */
   header {
-    padding: 28px 0 24px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 48px;
-  }
-
-  .header-inner {
+    padding: 24px 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 64px;
   }
 
-  .logo-area {
+  .logo {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
   }
 
-  .logo-icon {
-    width: 38px;
-    height: 38px;
-    flex-shrink: 0;
-  }
+  .logo svg { width: 34px; height: 34px; }
 
-  .brand-text {
-    display: flex;
-    flex-direction: column;
-    line-height: 1;
-  }
-
-  .brand-name {
-    font-size: 22px;
+  .logo-text { line-height: 1; }
+  .logo-name {
+    font-size: 20px;
     font-weight: 800;
     color: var(--aqua);
     letter-spacing: -0.5px;
   }
-
-  .brand-sub {
-    font-size: 10px;
+  .logo-by {
+    font-family: 'Poppins', monospace;
+    font-size: 9px;
     color: var(--text-dim);
     letter-spacing: 2px;
     text-transform: uppercase;
     margin-top: 3px;
-    font-family: 'Poppins', monospace;
   }
 
-  .header-badge {
+  .badge {
     font-family: 'Poppins', monospace;
-    font-size: 10px;
+    font-size: 9px;
+    letter-spacing: 1.5px;
     color: var(--aqua);
     border: 1px solid var(--border);
-    padding: 5px 10px;
-    letter-spacing: 1px;
     background: var(--aqua-dim);
+    padding: 5px 10px;
+    text-transform: uppercase;
   }
 
-  /* Hero */
+  /* ── HERO ── */
   .hero {
-    margin-bottom: 56px;
     text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Poppins', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--aqua);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    opacity: 0.8;
   }
 
   .hero h1 {
-    font-size: clamp(32px, 5vw, 52px);
+    font-size: clamp(36px, 5.5vw, 58px);
     font-weight: 800;
-    line-height: 1.05;
-    letter-spacing: -1px;
-    margin-bottom: 16px;
+    line-height: 1.04;
+    letter-spacing: -1.5px;
+    margin-bottom: 18px;
   }
 
-  .hero h1 span {
+  .hero h1 em {
+    font-style: normal;
     color: var(--aqua);
-    position: relative;
   }
 
   .hero p {
-    color: var(--text-dim);
-    font-size: 16px;
-    max-width: 520px;
+    font-size: 15px;
+    color: var(--text-mid);
+    line-height: 1.7;
+    max-width: 480px;
     margin: 0 auto;
-    line-height: 1.6;
   }
 
-  /* Tabs */
+  /* ── DOMAIN INPUT ── */
+  .domain-card {
+    background: var(--dark-2);
+    border: 1px solid var(--border);
+    padding: 32px;
+    margin-bottom: 48px;
+    position: relative;
+  }
+
+  .domain-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--aqua), transparent);
+  }
+
+  .domain-label {
+    font-family: 'Poppins', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .domain-row {
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .domain-input-wrap {
+    flex: 1;
+    position: relative;
+  }
+
+  .domain-prefix {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Poppins', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  #domainInput {
+    width: 100%;
+    background: var(--dark-3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Poppins', monospace;
+    font-size: 14px;
+    padding: 15px 16px 15px 85px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  #domainInput:focus {
+    border-color: var(--aqua);
+    box-shadow: 0 0 0 3px var(--aqua-dim);
+  }
+
+  #domainInput::placeholder { color: var(--text-dim); }
+
+  .btn-analyze {
+    background: var(--aqua);
+    color: #000;
+    border: none;
+    padding: 0 32px;
+    font-family: 'Poppins', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-analyze:hover {
+    background: #fff;
+    box-shadow: 0 0 24px var(--aqua-glow);
+  }
+
+  .btn-analyze:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .domain-hint {
+    font-family: 'Poppins', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 10px;
+  }
+
+  /* ── LOADING STATE ── */
+  .global-loading {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 48px 0;
+    text-align: center;
+  }
+
+  .global-loading.visible { display: flex; }
+
+  .loading-ring {
+    width: 48px;
+    height: 48px;
+    border: 2px solid var(--border);
+    border-top-color: var(--aqua);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-domain {
+    font-family: 'Poppins', monospace;
+    font-size: 13px;
+    color: var(--aqua);
+  }
+
+  .loading-steps {
+    font-family: 'Poppins', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+  }
+
+  .loading-step { opacity: 0.3; transition: opacity 0.4s; }
+  .loading-step.active { opacity: 1; color: var(--aqua); }
+  .loading-step.done { opacity: 0.5; }
+
+  /* ── RESULTS WORKSPACE ── */
+  #workspace { display: none; }
+  #workspace.visible { display: block; }
+
+  .workspace-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-dim);
+  }
+
+  .workspace-domain {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .ws-domain-label {
+    font-family: 'Poppins', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .ws-domain-val {
+    font-family: 'Poppins', monospace;
+    font-size: 13px;
+    color: var(--aqua);
+  }
+
+  .btn-reset {
+    font-family: 'Poppins', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    background: none;
+    border: 1px solid var(--border-dim);
+    padding: 6px 14px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+
+  .btn-reset:hover { color: var(--text); border-color: var(--border); }
+
+  /* ── TABS ── */
   .tabs {
     display: flex;
     gap: 0;
     border-bottom: 1px solid var(--border);
-    margin-bottom: 40px;
+    margin-bottom: 32px;
     overflow-x: auto;
   }
 
   .tab {
-    padding: 14px 28px;
+    padding: 12px 24px;
     font-family: 'Poppins', monospace;
-    font-size: 11px;
+    font-size: 10px;
     letter-spacing: 1.5px;
     text-transform: uppercase;
     color: var(--text-dim);
@@ -161,68 +356,251 @@
     bottom: -1px;
   }
 
-  .tab:hover { color: var(--text); }
+  .tab:hover { color: var(--text-mid); }
+  .tab.active { color: var(--aqua); border-bottom-color: var(--aqua); }
 
-  .tab.active {
-    color: var(--aqua);
-    border-bottom-color: var(--aqua);
+  .tab-dot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--green);
+    margin-right: 6px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+    display: none;
   }
 
-  /* Panels */
-  .panel { display: none; }
-  .panel.active { display: block; }
+  .tab.done .tab-dot { display: inline-block; }
 
-  /* Card */
-  .card {
+  /* ── PANEL ── */
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeUp 0.3s ease; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SCORE OVERVIEW ── */
+  .score-overview {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 32px;
+    align-items: center;
     background: var(--dark-2);
     border: 1px solid var(--border);
-    padding: 32px;
+    padding: 28px 32px;
     margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
   }
 
-  .card-title {
-    font-size: 13px;
+  .score-overview::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 3px;
+    background: var(--aqua);
+  }
+
+  .score-circle {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 3px solid var(--aqua);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 24px var(--aqua-glow);
+    flex-shrink: 0;
+  }
+
+  .score-num {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--aqua);
+    line-height: 1;
+  }
+
+  .score-denom {
     font-family: 'Poppins', monospace;
-    letter-spacing: 2px;
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+  }
+
+  .score-summary h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .score-summary p {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+
+  /* ── RESULT BLOCKS ── */
+  .result-section {
+    margin-bottom: 20px;
+  }
+
+  .result-section-title {
+    font-family: 'Poppins', monospace;
+    font-size: 9px;
+    letter-spacing: 2.5px;
     text-transform: uppercase;
     color: var(--aqua);
-    margin-bottom: 20px;
+    margin-bottom: 12px;
     display: flex;
     align-items: center;
     gap: 8px;
   }
 
-  .card-title::before {
+  .result-section-title::after {
     content: '';
-    display: block;
-    width: 6px;
-    height: 6px;
-    background: var(--aqua);
-    border-radius: 50%;
+    flex: 1;
+    height: 1px;
+    background: var(--border);
   }
 
-  /* Form elements */
-  label {
-    display: block;
-    font-size: 12px;
-    color: var(--text-dim);
+  .result-block {
+    background: var(--dark-2);
+    border: 1px solid var(--border-dim);
+    padding: 20px 24px;
     font-family: 'Poppins', monospace;
-    letter-spacing: 1px;
+    font-size: 12px;
+    line-height: 1.9;
+    color: var(--text-mid);
+    white-space: pre-wrap;
+  }
+
+  .result-block + .result-block { border-top: none; }
+
+  /* checklist items */
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-dim);
+    font-family: 'Poppins', monospace;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .check-item:last-child { border-bottom: none; }
+
+  .check-icon { flex-shrink: 0; width: 18px; text-align: center; }
+  .check-pass { color: var(--green); }
+  .check-fail { color: var(--red); }
+  .check-warn { color: var(--yellow); }
+
+  .check-label { color: var(--text); flex: 1; }
+  .check-note { color: var(--text-dim); font-size: 11px; margin-top: 2px; }
+
+  /* Priority fixes */
+  .fix-item {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border-dim);
+    align-items: flex-start;
+  }
+
+  .fix-item:last-child { border-bottom: none; }
+
+  .fix-num {
+    font-family: 'Poppins', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--aqua);
+    opacity: 0.3;
+    line-height: 1;
+    flex-shrink: 0;
+    width: 28px;
+  }
+
+  .fix-content { flex: 1; }
+  .fix-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .fix-desc {
+    font-family: 'Poppins', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+
+  /* Tag list */
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 16px 24px;
+    background: var(--dark-2);
+    border: 1px solid var(--border-dim);
+  }
+
+  .tag {
+    background: var(--aqua-dim);
+    color: var(--aqua);
+    border: 1px solid var(--border);
+    padding: 5px 13px;
+    font-family: 'Poppins', monospace;
+    font-size: 11px;
+  }
+
+  /* Sub tools */
+  .sub-tool {
+    background: var(--dark-2);
+    border: 1px solid var(--border-dim);
+    padding: 28px;
+    margin-bottom: 20px;
+  }
+
+  .sub-tool-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .sub-tool-desc {
+    font-family: 'Poppins', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .field-label {
+    font-family: 'Poppins', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
+    color: var(--text-dim);
     margin-bottom: 8px;
+    display: block;
   }
 
   input[type="text"], textarea, select {
     width: 100%;
     background: var(--dark-3);
-    border: 1px solid var(--border);
+    border: 1px solid var(--border-dim);
     color: var(--text);
     font-family: 'Poppins', monospace;
-    font-size: 13px;
-    padding: 12px 16px;
+    font-size: 12px;
+    padding: 11px 14px;
     outline: none;
-    transition: border-color 0.2s;
-    border-radius: var(--radius);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    margin-bottom: 16px;
   }
 
   input[type="text"]:focus,
@@ -232,28 +610,16 @@
     box-shadow: 0 0 0 2px var(--aqua-dim);
   }
 
-  textarea { resize: vertical; min-height: 100px; line-height: 1.5; }
+  textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+  select { cursor: pointer; }
 
-  .form-row {
-    margin-bottom: 20px;
-  }
-
-  .form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-
-  @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
-
-  /* Button */
   .btn {
     background: var(--aqua);
-    color: var(--dark);
+    color: #000;
     border: none;
-    padding: 14px 32px;
+    padding: 12px 28px;
     font-family: 'Poppins', monospace;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -262,19 +628,10 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    border-radius: var(--radius);
   }
 
-  .btn:hover {
-    background: #fff;
-    box-shadow: 0 0 20px var(--aqua-glow);
-  }
-
-  .btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-    box-shadow: none;
-  }
+  .btn:hover { background: #fff; box-shadow: 0 0 20px var(--aqua-glow); }
+  .btn:disabled { opacity: 0.3; cursor: not-allowed; box-shadow: none; }
 
   .btn-outline {
     background: transparent;
@@ -288,97 +645,21 @@
     box-shadow: 0 0 16px var(--aqua-glow);
   }
 
-  /* Results */
-  .results {
-    display: none;
-    margin-top: 24px;
-    animation: fadeIn 0.4s ease;
-  }
-
-  .results.visible { display: block; }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .result-block {
-    background: var(--dark-3);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--aqua);
-    padding: 20px 24px;
-    margin-bottom: 16px;
-    font-family: 'Poppins', monospace;
-    font-size: 12px;
-    line-height: 1.8;
-    white-space: pre-wrap;
-    color: var(--text);
-  }
-
-  .result-block h3 {
-    font-family: 'Raleway', sans-serif;
-    font-size: 13px;
-    color: var(--aqua);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-    font-weight: 700;
-  }
-
-  /* Score bar */
-  .score-row {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 10px;
-  }
-
-  .score-label {
-    width: 180px;
-    font-size: 11px;
-    color: var(--text-dim);
-    flex-shrink: 0;
-  }
-
-  .score-bar-wrap {
-    flex: 1;
-    height: 6px;
-    background: var(--dark-4);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-
-  .score-bar-fill {
-    height: 100%;
-    background: var(--aqua);
-    border-radius: 3px;
-    transition: width 0.8s ease;
-  }
-
-  .score-val {
-    font-size: 11px;
-    color: var(--aqua);
-    width: 36px;
-    text-align: right;
-    flex-shrink: 0;
-  }
-
-  /* Loading */
-  .loading {
+  .tool-loading {
     display: none;
     align-items: center;
-    gap: 12px;
-    padding: 20px 0;
+    gap: 10px;
+    margin-top: 16px;
     font-family: 'Poppins', monospace;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--aqua);
   }
 
-  .loading.visible { display: flex; }
+  .tool-loading.visible { display: flex; }
 
   .spinner {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     border: 2px solid var(--border);
     border-top-color: var(--aqua);
     border-radius: 50%;
@@ -386,272 +667,240 @@
     flex-shrink: 0;
   }
 
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* Tags */
-  .tag-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 8px;
+  .tool-results {
+    display: none;
+    margin-top: 20px;
+    animation: fadeUp 0.3s ease;
   }
 
-  .tag {
-    background: var(--aqua-dim);
+  .tool-results.visible { display: block; }
+
+  /* Meta result cards */
+  .meta-card {
+    background: var(--dark-3);
+    border: 1px solid var(--border-dim);
+    border-left: 3px solid var(--aqua);
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    font-family: 'Poppins', monospace;
+    font-size: 12px;
+  }
+
+  .meta-var-label {
+    font-size: 9px;
+    letter-spacing: 2px;
     color: var(--aqua);
-    border: 1px solid var(--border);
-    padding: 4px 12px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .meta-row { margin-bottom: 8px; }
+  .meta-row-label { color: var(--text-dim); font-size: 10px; }
+  .meta-row-val { color: var(--text); margin-top: 2px; line-height: 1.5; }
+  .meta-chars { color: var(--text-dim); font-size: 10px; margin-top: 4px; }
+
+  /* Error */
+  .error-block {
+    background: rgba(255,79,79,0.06);
+    border: 1px solid rgba(255,79,79,0.2);
+    border-left: 3px solid var(--red);
+    padding: 16px 20px;
     font-family: 'Poppins', monospace;
     font-size: 11px;
-    border-radius: 2px;
-  }
-
-  /* Divider */
-  .divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 28px 0;
+    color: var(--red);
+    line-height: 1.7;
+    margin-top: 16px;
   }
 
   /* Footer */
   footer {
     margin-top: 80px;
-    padding: 28px 0;
-    border-top: 1px solid var(--border);
+    padding: 24px 0;
+    border-top: 1px solid var(--border-dim);
     text-align: center;
   }
 
-  .footer-text {
+  .footer-txt {
     font-family: 'Poppins', monospace;
-    font-size: 11px;
+    font-size: 10px;
     color: var(--text-dim);
     letter-spacing: 1px;
   }
 
-  .footer-text a {
-    color: var(--aqua);
-    text-decoration: none;
-  }
+  .footer-txt a { color: var(--aqua); text-decoration: none; }
+  .footer-txt a:hover { text-decoration: underline; }
 
-  .footer-text a:hover { text-decoration: underline; }
-
-  /* Streaming text */
-  .stream-text { white-space: pre-wrap; }
-
-  /* API key notice */
-  .api-notice {
-    background: var(--dark-3);
-    border: 1px solid rgba(255,200,0,0.2);
-    border-left: 3px solid #ffc800;
-    padding: 14px 20px;
-    margin-bottom: 32px;
-    font-family: 'Poppins', monospace;
-    font-size: 11px;
-    color: #ffc800;
-    line-height: 1.7;
-  }
-
-  .error-block {
-    background: var(--dark-3);
-    border: 1px solid rgba(255,80,80,0.3);
-    border-left: 3px solid #ff5050;
-    padding: 16px 20px;
-    margin-top: 16px;
-    font-family: 'Poppins', monospace;
-    font-size: 12px;
-    color: #ff5050;
-    line-height: 1.6;
+  @media (max-width: 600px) {
+    .domain-row { flex-direction: column; }
+    .btn-analyze { padding: 14px; justify-content: center; }
+    .score-overview { grid-template-columns: 1fr; text-align: center; }
+    .score-circle { margin: 0 auto; }
   }
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<div class="container">
-
+  <!-- HEADER -->
   <header>
-    <div class="header-inner">
-      <div class="logo-area">
-        <!-- Heyproxy SVG logo inline -->
-        <svg class="logo-icon" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
-          <circle fill="#00ffff" cx="250" cy="250" r="250"/>
-          <path fill="#222" stroke="aqua" stroke-miterlimit="10" stroke-width="2" d="M94.51,213.64c10.43,0,19.11,7.19,21.96,16.92l96.57,13.33c.7-1.8,1.45-3.59,2.15-5.39l-83.25-74.96c-3.59,2.54-7.93,3.95-12.23,3.95-12.62,0-22.71-10.08-22.71-22.71s10.08-22.71,22.71-22.71,22.71,10.08,22.71,22.71c0,2.54-.7,5.04-1.45,7.58l83.25,73.87c5.39-4.69,12.23-7.58,20.56-8.64l-1.1-46.86c-8.99-3.24-15.47-11.53-15.47-21.61,0-12.62,10.08-22.71,22.71-22.71s22.71,10.08,22.71,22.71c0,9.73-6.49,18.37-15.12,21.26l1.1,47.56c4.34,1.1,8.29,2.54,11.88,4.69l65.58-96.22c-2.54-3.59-3.95-7.93-3.95-12.98,0-12.62,10.08-22.71,22.71-22.71s22.71,10.08,22.71,22.71-10.43,22.71-22.71,22.71c-2.54,0-4.69-.35-6.84-1.1l-66.37,97.32c6.14,9.38,6.84,16.57,6.84,27.05l98.02,30.64c3.95-5.39,10.43-8.99,18.02-8.99,12.62,0,22.71,10.08,22.71,22.71s-10.08,22.71-22.71,22.71-22.71-10.08-22.71-22.71l-96.57-30.25c-3.59,9.38-10.78,16.22-20.52,19.46l21.61,51.9c12.98,0,23.76,9.38,23.76,22.71,0,12.62-10.43,22.71-22.71,22.71s-22.71-10.08-22.71-22.71c0-6.84,3.24-13.33,8.29-17.67l-23.06-54.49c-6.84,0-12.62-1.1-18.02-3.59l-74.57,82.5c2.15,3.59,3.59,7.93,3.59,12.23,0,12.62-10.08,22.71-22.71,22.71s-22.71-10.08-22.71-22.71,10.08-22.71,22.71-22.71c2.89,0,5.39.35,7.93,1.45l73.87-82.15c-5.79-6.14-9.03-14.77-9.38-24.86l-96.18-13.33c-3.59,8.29-11.53,14.07-20.91,14.07-12.62,0-22.71-10.43-22.71-22.71,0-12.62,10.08-22.71,22.71-22.71h0ZM250.53,274.88c11.18,0,18.37-7.58,18.37-18.37s-7.19-18.37-18.37-18.37-18.37,7.19-18.37,18.37,7.54,18.37,18.37,18.37Z"/>
-        </svg>
-        <div class="brand-text">
-          <span class="brand-name">SEARCHIQ</span>
-          <span class="brand-sub">by Heyproxy</span>
-        </div>
+    <div class="logo">
+      <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+        <circle fill="#00ffff" cx="250" cy="250" r="250"/>
+        <path fill="#222" stroke="aqua" stroke-miterlimit="10" stroke-width="2" d="M94.51,213.64c10.43,0,19.11,7.19,21.96,16.92l96.57,13.33c.7-1.8,1.45-3.59,2.15-5.39l-83.25-74.96c-3.59,2.54-7.93,3.95-12.23,3.95-12.62,0-22.71-10.08-22.71-22.71s10.08-22.71,22.71-22.71,22.71,10.08,22.71,22.71c0,2.54-.7,5.04-1.45,7.58l83.25,73.87c5.39-4.69,12.23-7.58,20.56-8.64l-1.1-46.86c-8.99-3.24-15.47-11.53-15.47-21.61,0-12.62,10.08-22.71,22.71-22.71s22.71,10.08,22.71,22.71c0,9.73-6.49,18.37-15.12,21.26l1.1,47.56c4.34,1.1,8.29,2.54,11.88,4.69l65.58-96.22c-2.54-3.59-3.95-7.93-3.95-12.98,0-12.62,10.08-22.71,22.71-22.71s22.71,10.08,22.71,22.71-10.43,22.71-22.71,22.71c-2.54,0-4.69-.35-6.84-1.1l-66.37,97.32c6.14,9.38,6.84,16.57,6.84,27.05l98.02,30.64c3.95-5.39,10.43-8.99,18.02-8.99,12.62,0,22.71,10.08,22.71,22.71s-10.08,22.71-22.71,22.71-22.71-10.08-22.71-22.71l-96.57-30.25c-3.59,9.38-10.78,16.22-20.52,19.46l21.61,51.9c12.98,0,23.76,9.38,23.76,22.71,0,12.62-10.43,22.71-22.71,22.71s-22.71-10.08-22.71-22.71c0-6.84,3.24-13.33,8.29-17.67l-23.06-54.49c-6.84,0-12.62-1.1-18.02-3.59l-74.57,82.5c2.15,3.59,3.59,7.93,3.59,12.23,0,12.62-10.08,22.71-22.71,22.71s-22.71-10.08-22.71-22.71,10.08-22.71,22.71-22.71c2.89,0,5.39.35,7.93,1.45l73.87-82.15c-5.79-6.14-9.03-14.77-9.38-24.86l-96.18-13.33c-3.59,8.29-11.53,14.07-20.91,14.07-12.62,0-22.71-10.43-22.71-22.71,0-12.62,10.08-22.71,22.71-22.71h0ZM250.53,274.88c11.18,0,18.37-7.58,18.37-18.37s-7.19-18.37-18.37-18.37-18.37,7.19-18.37,18.37,7.54,18.37,18.37,18.37Z"/>
+      </svg>
+      <div class="logo-text">
+        <div class="logo-name">SEARCHIQ</div>
+        <div class="logo-by">by Heyproxy</div>
       </div>
-      <div class="header-badge">AI SEO TOOLKIT v1.0</div>
     </div>
+    <div class="badge">AI SEO TOOLKIT · 2026</div>
   </header>
 
+  <!-- HERO -->
   <div class="hero">
-    <h1>SEO/AEO Intelligence<br>for the <span>AI Era</span></h1>
-    <p>Keyword analysis, technical audits, and meta generation — all powered by Claude AI. Built for 2026 search.</p>
+    <div class="hero-eyebrow">Powered by Claude AI</div>
+    <h1>Your website.<br><em>Fully analyzed.</em></h1>
+    <p>Enter your domain and get a complete SEO audit — then use our tools to fix what matters most.</p>
   </div>
 
-  <div class="api-notice">
-    ⚡ This tool uses the Anthropic API. Make sure you're running this via a server or local environment that has API access configured, or paste your API key below to get started.
-    <div style="margin-top:10px; display:flex; gap:10px; align-items:center;">
-      <input type="password" id="apiKeyInput" placeholder="sk-ant-..." style="flex:1; font-size:11px; padding:8px 12px;">
-      <button class="btn btn-outline" style="padding:8px 16px; font-size:10px;" onclick="saveKey()">SAVE KEY</button>
+  <!-- DOMAIN INPUT -->
+  <div class="domain-card">
+    <span class="domain-label">Enter your website domain</span>
+    <div class="domain-row">
+      <div class="domain-input-wrap">
+        <span class="domain-prefix">https://</span>
+        <input type="text" id="domainInput" placeholder="yourdomain.com" autocomplete="off" autocapitalize="off" spellcheck="false"
+          onkeydown="if(event.key==='Enter') startAnalysis()">
+      </div>
+      <button class="btn-analyze" id="analyzeBtn" onclick="startAnalysis()">
+        Analyze Site →
+      </button>
     </div>
-    <div id="keyStatus" style="margin-top:6px; font-size:10px; color: #888;"></div>
+    <div class="domain-hint">We'll audit your SEO, check technical signals, and give you a prioritized action plan.</div>
   </div>
 
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('keyword', this)">Keyword Analyzer</button>
-    <button class="tab" onclick="switchTab('audit', this)">SEO Auditor</button>
-    <button class="tab" onclick="switchTab('meta', this)">Meta Generator</button>
+  <!-- GLOBAL LOADING -->
+  <div class="global-loading" id="globalLoading">
+    <div class="loading-ring"></div>
+    <div class="loading-domain" id="loadingDomain"></div>
+    <div class="loading-steps">
+      <div class="loading-step" id="step1">→ Analyzing site structure & technical signals</div>
+      <div class="loading-step" id="step2">→ Evaluating E-E-A-T & authority signals</div>
+      <div class="loading-step" id="step3">→ Checking AI Overview readiness</div>
+      <div class="loading-step" id="step4">→ Building your action plan</div>
+    </div>
   </div>
 
-  <!-- KEYWORD ANALYZER -->
-  <div class="panel active" id="panel-keyword">
-    <div class="card">
-      <div class="card-title">Keyword Analyzer</div>
-      <div class="form-row">
-        <label>Target Keyword or Phrase</label>
+  <!-- WORKSPACE -->
+  <div id="workspace">
+
+    <div class="workspace-header">
+      <div class="workspace-domain">
+        <span class="ws-domain-label">Analyzing:</span>
+        <span class="ws-domain-val" id="wsDomain"></span>
+      </div>
+      <button class="btn-reset" onclick="resetTool()">← New Domain</button>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" id="tab-audit" onclick="switchTab('audit', this)">
+        <span class="tab-dot"></span>SEO Audit
+      </button>
+      <button class="tab" id="tab-keyword" onclick="switchTab('keyword', this)">
+        <span class="tab-dot"></span>Keyword Analyzer
+      </button>
+      <button class="tab" id="tab-meta" onclick="switchTab('meta', this)">
+        <span class="tab-dot"></span>Meta Generator
+      </button>
+    </div>
+
+    <!-- AUDIT PANEL -->
+    <div class="panel active" id="panel-audit">
+      <div id="auditContent"></div>
+    </div>
+
+    <!-- KEYWORD PANEL -->
+    <div class="panel" id="panel-keyword">
+      <div class="sub-tool">
+        <div class="sub-tool-title">Keyword Analyzer</div>
+        <div class="sub-tool-desc">Analyze any keyword for competition, search intent, and AI Overview likelihood.</div>
+
+        <label class="field-label">Target Keyword or Phrase</label>
         <input type="text" id="kw-input" placeholder="e.g. technical SEO for WordPress 2026">
-      </div>
-      <div class="form-grid">
-        <div class="form-row">
-          <label>Industry / Niche</label>
-          <input type="text" id="kw-industry" placeholder="e.g. web development, e-commerce">
+
+        <label class="field-label">Industry / Niche (optional)</label>
+        <input type="text" id="kw-industry" placeholder="e.g. web development, e-commerce">
+
+        <button class="btn" onclick="analyzeKeyword()">Analyze Keyword</button>
+
+        <div class="tool-loading" id="kw-loading">
+          <div class="spinner"></div>
+          <span>Analyzing keyword signals...</span>
         </div>
-        <div class="form-row">
-          <label>Target Audience</label>
-          <input type="text" id="kw-audience" placeholder="e.g. small business owners">
-        </div>
+        <div class="tool-results" id="kw-results"></div>
       </div>
-      <button class="btn" onclick="analyzeKeyword()">
-        <span>Analyze Keyword</span>
-      </button>
     </div>
 
-    <div class="loading" id="kw-loading">
-      <div class="spinner"></div>
-      <span>Analyzing keyword signals...</span>
-    </div>
-    <div class="results" id="kw-results"></div>
-  </div>
+    <!-- META PANEL -->
+    <div class="panel" id="panel-meta">
+      <div class="sub-tool">
+        <div class="sub-tool-title">Meta Title & Description Generator</div>
+        <div class="sub-tool-desc">Generate optimized meta tags for any page. Pre-filled with your domain — just add page details.</div>
 
-  <!-- SEO AUDITOR -->
-  <div class="panel" id="panel-audit">
-    <div class="card">
-      <div class="card-title">Technical SEO Auditor</div>
-      <div class="form-row">
-        <label>Website URL</label>
-        <input type="text" id="audit-url" placeholder="https://yourdomain.com">
-      </div>
-      <div class="form-row">
-        <label>Describe Your Website (type, content, platform)</label>
-        <textarea id="audit-desc" placeholder="e.g. WordPress blog about digital marketing, using Elementor, mostly written content with some product pages..."></textarea>
-      </div>
-      <div class="form-row">
-        <label>Primary Keywords You're Targeting</label>
-        <input type="text" id="audit-keywords" placeholder="e.g. SEO services, web design PA">
-      </div>
-      <button class="btn" onclick="runAudit()">
-        <span>Run SEO Audit</span>
-      </button>
-    </div>
+        <label class="field-label">Page Topic / What This Page Is About</label>
+        <textarea id="meta-topic" placeholder="e.g. Our managed WordPress hosting plans with isolated containers and CDN..."></textarea>
 
-    <div class="loading" id="audit-loading">
-      <div class="spinner"></div>
-      <span>Running technical audit...</span>
-    </div>
-    <div class="results" id="audit-results"></div>
-  </div>
+        <label class="field-label">Primary Keyword to Target</label>
+        <input type="text" id="meta-keyword" placeholder="e.g. managed WordPress hosting">
 
-  <!-- META GENERATOR -->
-  <div class="panel" id="panel-meta">
-    <div class="card">
-      <div class="card-title">Meta Title & Description Generator</div>
-      <div class="form-row">
-        <label>Page Topic / Content Summary</label>
-        <textarea id="meta-topic" placeholder="Describe what this page is about..."></textarea>
-      </div>
-      <div class="form-grid">
-        <div class="form-row">
-          <label>Primary Keyword</label>
-          <input type="text" id="meta-keyword" placeholder="e.g. technical SEO guide">
-        </div>
-        <div class="form-row">
-          <label>Brand / Company Name</label>
-          <input type="text" id="meta-brand" placeholder="e.g. Heyproxy">
-        </div>
-      </div>
-      <div class="form-row">
-        <label>How Many Variations?</label>
+        <label class="field-label">How Many Variations?</label>
         <select id="meta-count">
           <option value="3">3 variations</option>
           <option value="5" selected>5 variations</option>
           <option value="10">10 variations</option>
         </select>
+
+        <button class="btn" onclick="generateMeta()">Generate Meta Tags</button>
+
+        <div class="tool-loading" id="meta-loading">
+          <div class="spinner"></div>
+          <span>Generating meta variations...</span>
+        </div>
+        <div class="tool-results" id="meta-results"></div>
       </div>
-      <button class="btn" onclick="generateMeta()">
-        <span>Generate Meta Tags</span>
-      </button>
     </div>
 
-    <div class="loading" id="meta-loading">
-      <div class="spinner"></div>
-      <span>Generating meta variations...</span>
-    </div>
-    <div class="results" id="meta-results"></div>
-  </div>
+  </div><!-- /workspace -->
 
-</div>
+</div><!-- /wrap -->
 
 <footer>
-  <div class="container">
-    <div class="footer-text">
-      SEARCHIQ is powered by <a href="https://heyproxy.io" target="_blank">Heyproxy.io</a> — Technical SEO & Hosting for the AI Era &nbsp;·&nbsp; 2026
+  <div class="wrap">
+    <div class="footer-txt">
+      SEARCHIQ by <a href="https://heyproxy.io" target="_blank">Heyproxy.io</a> &nbsp;·&nbsp; Technical SEO & Hosting for the AI Era &nbsp;·&nbsp; 2026
     </div>
   </div>
 </footer>
 
 <script>
-  let apiKey = localStorage.getItem('searchiq_api_key') || '';
+  // ── CONFIG ──
+  // Replace with your actual Anthropic API key
+  const API_KEY = 'YOUR_API_KEY_HERE';
+  let currentDomain = '';
 
-  function saveKey() {
-    const val = document.getElementById('apiKeyInput').value.trim();
-    if (val) {
-      apiKey = val;
-      localStorage.setItem('searchiq_api_key', val);
-      document.getElementById('keyStatus').textContent = '✓ API key saved for this session.';
-      document.getElementById('keyStatus').style.color = '#00ffff';
-    }
-  }
-
-  if (apiKey) {
-    document.getElementById('apiKeyInput').value = apiKey;
-    document.getElementById('keyStatus').textContent = '✓ API key loaded.';
-    document.getElementById('keyStatus').style.color = '#00ffff';
-  }
-
-  function switchTab(name, el) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    el.classList.add('active');
-    document.getElementById('panel-' + name).classList.add('active');
-  }
-
-  async function callClaude(prompt) {
-    const key = apiKey || document.getElementById('apiKeyInput').value.trim();
-    if (!key) throw new Error('No API key. Please enter your Anthropic API key above.');
-
+  // ── HELPERS ──
+  async function callClaude(prompt, maxTokens = 1800) {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': key,
+        'x-api-key': API_KEY,
         'anthropic-version': '2023-06-01',
         'anthropic-dangerous-direct-browser-access': 'true'
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 1500,
+        max_tokens: maxTokens,
         messages: [{ role: 'user', content: prompt }]
       })
     });
@@ -665,17 +914,238 @@
     return data.content?.[0]?.text || '';
   }
 
-  function showError(containerId, msg) {
-    const el = document.getElementById(containerId);
-    el.classList.add('visible');
-    el.innerHTML = `<div class="error-block">⚠ ${msg}</div>`;
+  function cleanDomain(input) {
+    return input.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '').trim().toLowerCase();
+  }
+
+  function switchTab(name, el) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('panel-' + name).classList.add('active');
+  }
+
+  function resetTool() {
+    document.getElementById('workspace').style.display = 'none';
+    document.getElementById('domainInput').value = '';
+    document.getElementById('analyzeBtn').disabled = false;
+    currentDomain = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── MAIN ANALYSIS ──
+  async function startAnalysis() {
+    const raw = document.getElementById('domainInput').value.trim();
+    if (!raw) return;
+    currentDomain = cleanDomain(raw);
+
+    document.getElementById('analyzeBtn').disabled = true;
+    document.getElementById('globalLoading').classList.add('visible');
+    document.getElementById('loadingDomain').textContent = 'https://' + currentDomain;
+    document.getElementById('workspace').style.display = 'none';
+
+    // Animate loading steps
+    const steps = ['step1','step2','step3','step4'];
+    let si = 0;
+    const stepInterval = setInterval(() => {
+      if (si > 0) document.getElementById(steps[si-1]).classList.remove('active');
+      if (si < steps.length) {
+        document.getElementById(steps[si]).classList.add('active');
+        si++;
+      }
+    }, 1200);
+
+    try {
+      const auditText = await runAuditCall(currentDomain);
+      clearInterval(stepInterval);
+      steps.forEach(s => {
+        document.getElementById(s).classList.remove('active');
+        document.getElementById(s).classList.add('done');
+      });
+
+      document.getElementById('globalLoading').classList.remove('visible');
+      document.getElementById('wsDomain').textContent = 'https://' + currentDomain;
+      document.getElementById('workspace').style.display = 'block';
+
+      // Switch to audit tab and render
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('tab-audit').classList.add('active');
+      document.getElementById('panel-audit').classList.add('active');
+      document.getElementById('tab-audit').classList.add('done');
+
+      renderAudit(auditText);
+
+      // Pre-fill meta brand
+      document.getElementById('meta-topic').placeholder = `e.g. Services page for ${currentDomain} — describe what this page offers...`;
+
+      window.scrollTo({ top: document.getElementById('workspace').offsetTop - 80, behavior: 'smooth' });
+
+    } catch(e) {
+      clearInterval(stepInterval);
+      document.getElementById('globalLoading').classList.remove('visible');
+      document.getElementById('analyzeBtn').disabled = false;
+      document.getElementById('workspace').style.display = 'block';
+      document.getElementById('auditContent').innerHTML = `<div class="error-block">⚠ ${e.message}<br><br>Make sure your API key is set correctly in the script.</div>`;
+      document.getElementById('workspace').style.display = 'block';
+    }
+  }
+
+  async function runAuditCall(domain) {
+    return await callClaude(`You are a senior technical SEO auditor in 2026. Perform a comprehensive SEO audit for this website.
+
+Domain: ${domain}
+
+Based on the domain name, infer what type of business/website this likely is and audit accordingly. Be specific and actionable.
+
+Respond in this EXACT format with these exact section headers — nothing before OVERALL SCORE:
+
+OVERALL SCORE
+[Single number 0-100 only, e.g.: 67]
+
+SCORE SUMMARY
+[One sentence headline for the score, e.g.: "Solid foundation with critical gaps in AI readiness and structured data."]
+
+SCORE DETAIL
+[2-3 sentences expanding on the overall SEO health.]
+
+TECHNICAL CHECKLIST
+[List each item on its own line in format: STATUS | Item Name | Brief note
+STATUS must be exactly one of: PASS, FAIL, WARN
+Cover: HTTPS/SSL, Mobile Responsiveness, Page Speed, XML Sitemap, Robots.txt, Canonical Tags, Schema/Structured Data, Core Web Vitals, URL Structure, Internal Linking]
+
+ON-PAGE SEO
+[Score X/100 then bullet points covering: Title Tags, Meta Descriptions, Header Structure, Keyword Placement, Image Alt Text. Use • for bullets.]
+
+EEAT SIGNALS
+[Score each E-E-A-T factor X/10: Experience, Expertise, Authoritativeness, Trustworthiness. One line each, then 2 sentences overall.]
+
+AI OVERVIEW READINESS
+[Score X/10 then 3 specific recommendations to improve AI Overview inclusion chances.]
+
+TOP PRIORITY FIXES
+[Exactly 5 items. Format each as:
+FIX: Short title
+WHY: One sentence explanation]
+
+QUICK WINS
+[Exactly 3 items the site owner can do in under 1 hour. Simple bullet list with •]`, 2000);
+  }
+
+  function renderAudit(text) {
+    const get = (section, next) => {
+      const escaped = section.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const nextEscaped = next ? next.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') : null;
+      const pattern = nextEscaped
+        ? new RegExp(`${escaped}\\s*\\n([\\s\\S]*?)(?=\\n${nextEscaped})`)
+        : new RegExp(`${escaped}\\s*\\n([\\s\\S]*?)$`);
+      const m = text.match(pattern);
+      return m ? m[1].trim() : '';
+    };
+
+    const score = parseInt(get('OVERALL SCORE', 'SCORE SUMMARY')) || 0;
+    const summary = get('SCORE SUMMARY', 'SCORE DETAIL');
+    const detail = get('SCORE DETAIL', 'TECHNICAL CHECKLIST');
+    const checklist = get('TECHNICAL CHECKLIST', 'ON-PAGE SEO');
+    const onpage = get('ON-PAGE SEO', 'EEAT SIGNALS');
+    const eeat = get('EEAT SIGNALS', 'AI OVERVIEW READINESS');
+    const ai = get('AI OVERVIEW READINESS', 'TOP PRIORITY FIXES');
+    const fixes = get('TOP PRIORITY FIXES', 'QUICK WINS');
+    const wins = get('QUICK WINS', null);
+
+    let html = '';
+
+    // Score overview
+    const scoreColor = score >= 70 ? 'var(--green)' : score >= 50 ? 'var(--yellow)' : 'var(--red)';
+    html += `
+      <div class="score-overview" style="--aqua: ${scoreColor};">
+        <div class="score-circle" style="border-color:${scoreColor}; box-shadow: 0 0 24px ${scoreColor}40;">
+          <div class="score-num" style="color:${scoreColor}">${score}</div>
+          <div class="score-denom">/ 100</div>
+        </div>
+        <div class="score-summary">
+          <h2>${summary || 'SEO Audit Complete'}</h2>
+          <p>${detail}</p>
+        </div>
+      </div>`;
+
+    // Technical checklist
+    html += `<div class="result-section"><div class="result-section-title">Technical Checklist</div>`;
+    html += `<div class="result-block" style="padding: 8px 24px;">`;
+    const checkLines = checklist.split('\n').filter(l => l.includes('|'));
+    checkLines.forEach(line => {
+      const parts = line.split('|').map(p => p.trim());
+      if (parts.length >= 2) {
+        const status = parts[0].toUpperCase();
+        const label = parts[1] || '';
+        const note = parts[2] || '';
+        const icon = status === 'PASS' ? '✓' : status === 'FAIL' ? '✗' : '⚠';
+        const cls = status === 'PASS' ? 'check-pass' : status === 'FAIL' ? 'check-fail' : 'check-warn';
+        html += `<div class="check-item">
+          <span class="check-icon ${cls}">${icon}</span>
+          <div>
+            <div class="check-label">${label}</div>
+            ${note ? `<div class="check-note">${note}</div>` : ''}
+          </div>
+        </div>`;
+      }
+    });
+    html += `</div></div>`;
+
+    // On-page
+    html += `<div class="result-section"><div class="result-section-title">On-Page SEO</div>`;
+    html += `<div class="result-block">${onpage.replace(/•/g, '\n•')}</div></div>`;
+
+    // E-E-A-T
+    html += `<div class="result-section"><div class="result-section-title">E-E-A-T Signals (2026)</div>`;
+    html += `<div class="result-block">${eeat}</div></div>`;
+
+    // AI Overview
+    html += `<div class="result-section"><div class="result-section-title">AI Overview Readiness</div>`;
+    html += `<div class="result-block">${ai}</div></div>`;
+
+    // Priority fixes
+    html += `<div class="result-section"><div class="result-section-title">Top 5 Priority Fixes</div>`;
+    html += `<div class="result-block" style="padding: 8px 24px;">`;
+    const fixBlocks = fixes.split(/FIX:/).filter(f => f.trim());
+    fixBlocks.forEach((block, i) => {
+      const whyMatch = block.match(/WHY:\s*(.+)/s);
+      const title = block.split('\n')[0].trim();
+      const why = whyMatch ? whyMatch[1].trim() : '';
+      html += `<div class="fix-item">
+        <div class="fix-num">0${i+1}</div>
+        <div class="fix-content">
+          <div class="fix-title">${title}</div>
+          <div class="fix-desc">${why}</div>
+        </div>
+      </div>`;
+    });
+    html += `</div></div>`;
+
+    // Quick wins
+    html += `<div class="result-section"><div class="result-section-title">Quick Wins (Under 1 Hour)</div>`;
+    html += `<div class="result-block">${wins}</div></div>`;
+
+    // CTA to other tools
+    html += `
+      <div style="background: var(--dark-2); border: 1px solid var(--border); padding: 24px 28px; margin-top: 8px; display: flex; align-items: center; justify-content: space-between; flex-wrap: gap;">
+        <div>
+          <div style="font-size:15px; font-weight:700; margin-bottom:4px;">Ready to optimize?</div>
+          <div style="font-family:'Space Mono',monospace; font-size:11px; color:var(--text-dim);">Use the Keyword Analyzer and Meta Generator to start fixing your top issues.</div>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
+          <button class="btn btn-outline" style="font-size:10px; padding:10px 20px;" onclick="switchTab('keyword', document.getElementById('tab-keyword'))">Keyword Analyzer →</button>
+          <button class="btn" style="font-size:10px; padding:10px 20px;" onclick="switchTab('meta', document.getElementById('tab-meta'))">Meta Generator →</button>
+        </div>
+      </div>`;
+
+    document.getElementById('auditContent').innerHTML = html;
   }
 
   // ── KEYWORD ANALYZER ──
   async function analyzeKeyword() {
     const kw = document.getElementById('kw-input').value.trim();
     const industry = document.getElementById('kw-industry').value.trim();
-    const audience = document.getElementById('kw-audience').value.trim();
     if (!kw) return alert('Please enter a keyword.');
 
     const loading = document.getElementById('kw-loading');
@@ -684,150 +1154,72 @@
     results.classList.remove('visible');
     results.innerHTML = '';
 
-    const prompt = `You are an expert SEO strategist in 2026. Analyze this keyword for SEO potential.
+    try {
+      const text = await callClaude(`You are an expert SEO strategist in 2026. Analyze this keyword.
 
 Keyword: "${kw}"
-Industry: ${industry || 'general'}
-Target audience: ${audience || 'general'}
-
-Return your analysis in this EXACT format — use these exact section headers:
+Website context: ${currentDomain || 'general'}
+Industry: ${industry || 'not specified'}
 
 SEARCH INTENT
-[Explain the primary search intent: informational / navigational / transactional / commercial. 2-3 sentences.]
+[Informational / Navigational / Transactional / Commercial — explain in 2 sentences]
 
 COMPETITION LEVEL
-[Rate as: Low / Medium / High / Very High. Explain why in 2 sentences.]
+[Low / Medium / High / Very High — explain why in 2 sentences]
 
 AI OVERVIEW LIKELIHOOD
-[Rate likelihood this keyword triggers a Google AI Overview: Low / Medium / High. Explain in 2 sentences.]
+[Low / Medium / High — explain in 2 sentences]
 
 DIFFICULTY SCORE
-[Give a score out of 100 and brief explanation. Format: XX/100 — explanation]
+[XX/100 — brief explanation]
 
 RECOMMENDED STRATEGY
-[3-4 sentences on how to approach ranking for this keyword in 2026, considering AI search.]
+[3-4 sentences on ranking approach for this keyword in 2026 AI search landscape]
 
-LSI & RELATED KEYWORDS
-[List 8-10 related keywords or phrases, one per line, each starting with a dash]
+RELATED KEYWORDS
+[8 related keywords, one per line, dash prefix]
 
-CONTENT RECOMMENDATIONS
-[3 specific content ideas that could rank for this keyword. Numbered list.]`;
+CONTENT IDEAS
+[3 specific content pieces that could rank. Numbered.]`);
 
-    try {
-      const text = await callClaude(prompt);
       loading.classList.remove('visible');
       results.classList.add('visible');
       results.innerHTML = renderKeywordResults(text);
-    } catch (e) {
+      document.getElementById('tab-keyword').classList.add('done');
+    } catch(e) {
       loading.classList.remove('visible');
-      showError('kw-results', e.message);
+      results.classList.add('visible');
+      results.innerHTML = `<div class="error-block">⚠ ${e.message}</div>`;
     }
   }
 
   function renderKeywordResults(text) {
-    const sections = [
-      'SEARCH INTENT', 'COMPETITION LEVEL', 'AI OVERVIEW LIKELIHOOD',
-      'DIFFICULTY SCORE', 'RECOMMENDED STRATEGY', 'LSI & RELATED KEYWORDS', 'CONTENT RECOMMENDATIONS'
-    ];
-
+    const sections = ['SEARCH INTENT','COMPETITION LEVEL','AI OVERVIEW LIKELIHOOD','DIFFICULTY SCORE','RECOMMENDED STRATEGY','RELATED KEYWORDS','CONTENT IDEAS'];
     let html = '';
-    sections.forEach(section => {
-      const regex = new RegExp(`${section}\\s*\\n([\\s\\S]*?)(?=${sections.filter(s=>s!==section).join('|')}|$)`);
-      const match = text.match(regex);
-      if (match) {
-        const content = match[1].trim();
-        if (section === 'LSI & RELATED KEYWORDS') {
-          const tags = content.split('\n').map(l => l.replace(/^[-•]\s*/, '').trim()).filter(Boolean);
-          html += `<div class="result-block"><h3>${section}</h3><div class="tag-list">${tags.map(t => `<span class="tag">${t}</span>`).join('')}</div></div>`;
-        } else {
-          html += `<div class="result-block"><h3>${section}</h3>${content}</div>`;
-        }
+    sections.forEach((s, i) => {
+      const next = sections[i+1];
+      const escaped = s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const nextEscaped = next ? next.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') : null;
+      const pattern = nextEscaped
+        ? new RegExp(`${escaped}\\s*\\n([\\s\\S]*?)(?=\\n${nextEscaped})`)
+        : new RegExp(`${escaped}\\s*\\n([\\s\\S]*?)$`);
+      const m = text.match(pattern);
+      if (!m) return;
+      const content = m[1].trim();
+      if (s === 'RELATED KEYWORDS') {
+        const tags = content.split('\n').map(l => l.replace(/^[-•]\s*/,'').trim()).filter(Boolean);
+        html += `<div class="result-section"><div class="result-section-title">${s}</div><div class="tag-list">${tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div></div>`;
+      } else {
+        html += `<div class="result-section"><div class="result-section-title">${s}</div><div class="result-block">${content}</div></div>`;
       }
     });
-
-    return html || `<div class="result-block"><h3>Analysis</h3>${text}</div>`;
-  }
-
-  // ── SEO AUDITOR ──
-  async function runAudit() {
-    const url = document.getElementById('audit-url').value.trim();
-    const desc = document.getElementById('audit-desc').value.trim();
-    const keywords = document.getElementById('audit-keywords').value.trim();
-    if (!url) return alert('Please enter a URL.');
-
-    const loading = document.getElementById('audit-loading');
-    const results = document.getElementById('audit-results');
-    loading.classList.add('visible');
-    results.classList.remove('visible');
-    results.innerHTML = '';
-
-    const prompt = `You are a senior technical SEO auditor in 2026. Perform a comprehensive SEO audit based on the information provided.
-
-URL: ${url}
-Site description: ${desc || 'Not provided'}
-Target keywords: ${keywords || 'Not provided'}
-
-Provide a detailed SEO audit covering these exact sections:
-
-OVERALL SEO SCORE
-[Give an overall score out of 100 based on what you can infer. Format: XX/100 with a brief summary.]
-
-TECHNICAL CHECKLIST
-[For each item, mark as ✓ PASS, ✗ FAIL, or ⚠ REVIEW NEEDED based on what you can infer from the URL and description. Cover: HTTPS/SSL, Mobile Responsiveness, Page Speed Signals, XML Sitemap, Robots.txt, Canonical Tags, Structured Data/Schema, Core Web Vitals readiness, URL Structure]
-
-ON-PAGE SEO
-[Score out of 100 and specific recommendations for: Title Tags, Meta Descriptions, Header Structure (H1-H3), Keyword Placement, Internal Linking, Image Alt Text]
-
-E-E-A-T SIGNALS (2026)
-[Assess Experience, Expertise, Authoritativeness, Trustworthiness signals. Score each out of 10 and explain.]
-
-AI OVERVIEW READINESS
-[How well is this site positioned to be cited in Google AI Overviews? Score out of 10 with specific recommendations.]
-
-TOP 5 PRIORITY FIXES
-[List the 5 most impactful changes to make immediately, numbered, with brief explanation of each.]
-
-QUICK WINS
-[3 things that can be implemented in under 1 hour for immediate SEO improvement.]`;
-
-    try {
-      const text = await callClaude(prompt);
-      loading.classList.remove('visible');
-      results.classList.add('visible');
-      results.innerHTML = renderAuditResults(text);
-    } catch (e) {
-      loading.classList.remove('visible');
-      showError('audit-results', e.message);
-    }
-  }
-
-  function renderAuditResults(text) {
-    const sections = [
-      'OVERALL SEO SCORE', 'TECHNICAL CHECKLIST', 'ON-PAGE SEO',
-      'E-E-A-T SIGNALS (2026)', 'AI OVERVIEW READINESS', 'TOP 5 PRIORITY FIXES', 'QUICK WINS'
-    ];
-
-    let html = '';
-    for (let i = 0; i < sections.length; i++) {
-      const section = sections[i];
-      const nextSection = sections[i + 1];
-      const regex = nextSection
-        ? new RegExp(`${section.replace('(', '\\(').replace(')', '\\)')}\\s*\\n([\\s\\S]*?)(?=${nextSection.replace('(', '\\(').replace(')', '\\)')})`)
-        : new RegExp(`${section.replace('(', '\\(').replace(')', '\\)')}\\s*\\n([\\s\\S]*?)$`);
-      const match = text.match(regex);
-      if (match) {
-        html += `<div class="result-block"><h3>${section}</h3>${match[1].trim()}</div>`;
-      }
-    }
-
-    return html || `<div class="result-block"><h3>Audit Results</h3>${text}</div>`;
+    return html || `<div class="result-block">${text}</div>`;
   }
 
   // ── META GENERATOR ──
   async function generateMeta() {
     const topic = document.getElementById('meta-topic').value.trim();
     const keyword = document.getElementById('meta-keyword').value.trim();
-    const brand = document.getElementById('meta-brand').value.trim();
     const count = document.getElementById('meta-count').value;
     if (!topic) return alert('Please describe the page topic.');
 
@@ -837,77 +1229,71 @@ QUICK WINS
     results.classList.remove('visible');
     results.innerHTML = '';
 
-    const prompt = `You are an expert SEO copywriter in 2026. Generate ${count} meta title and description variations.
+    try {
+      const text = await callClaude(`You are an expert SEO copywriter in 2026. Generate ${count} meta title and description variations.
 
+Website: ${currentDomain}
 Page topic: ${topic}
 Primary keyword: ${keyword || 'not specified'}
-Brand name: ${brand || 'not specified'}
 
 Rules:
-- Meta titles: 50-60 characters max, include keyword naturally
-- Meta descriptions: 140-160 characters max, compelling, include CTA
-- Vary the style across variations (question, statement, benefit-led, urgency, etc.)
-- Format optimized for 2026 search including AI Overview consideration
+- Titles: 50-60 characters, keyword near the front when natural
+- Descriptions: 140-160 characters, include a soft CTA
+- Vary approaches: question, benefit-led, urgency, statement, curiosity
+- Optimized for 2026 including AI Overview citation potential
 
-Format EXACTLY like this for each variation:
+Format EXACTLY:
 
 VARIATION 1
-Title: [title here]
-Description: [description here]
-Character count: Title: XX | Description: XX
+TITLE: [title]
+DESC: [description]
+CHARS: Title: XX | Desc: XX
 
 VARIATION 2
-Title: [title here]
-Description: [description here]
-Character count: Title: XX | Description: XX
+TITLE: [title]
+DESC: [description]
+CHARS: Title: XX | Desc: XX
 
-[continue for all ${count} variations]`;
+[continue for all ${count}]`, 1500);
 
-    try {
-      const text = await callClaude(prompt);
       loading.classList.remove('visible');
       results.classList.add('visible');
-      results.innerHTML = renderMetaResults(text, count);
-    } catch (e) {
+      results.innerHTML = renderMetaResults(text);
+      document.getElementById('tab-meta').classList.add('done');
+    } catch(e) {
       loading.classList.remove('visible');
-      showError('meta-results', e.message);
+      results.classList.add('visible');
+      results.innerHTML = `<div class="error-block">⚠ ${e.message}</div>`;
     }
   }
 
-  function renderMetaResults(text, count) {
-    let html = `<div class="result-block"><h3>Generated Meta Tags — ${count} Variations</h3>`;
-    
+  function renderMetaResults(text) {
+    let html = '';
     const variations = text.split(/VARIATION \d+/).filter(v => v.trim());
-    if (variations.length > 0) {
-      variations.forEach((v, i) => {
-        const titleMatch = v.match(/Title:\s*(.+)/);
-        const descMatch = v.match(/Description:\s*(.+)/);
-        const charMatch = v.match(/Character count:\s*(.+)/);
-        if (titleMatch || descMatch) {
-          html += `<div style="border-top: 1px solid rgba(0,255,255,0.1); padding-top: 16px; margin-top: 16px;">`;
-          html += `<div style="color: var(--aqua); font-size: 10px; letter-spacing: 2px; margin-bottom: 8px;">VARIATION ${i+1}</div>`;
-          if (titleMatch) html += `<div style="margin-bottom:6px;"><span style="color:var(--text-dim)">TITLE: </span>${titleMatch[1].trim()}</div>`;
-          if (descMatch) html += `<div style="margin-bottom:6px;"><span style="color:var(--text-dim)">DESC: </span>${descMatch[1].trim()}</div>`;
-          if (charMatch) html += `<div style="color:var(--text-dim); font-size:10px;">${charMatch[1].trim()}</div>`;
-          html += `</div>`;
-        }
-      });
-    } else {
-      html += `<div style="white-space:pre-wrap">${text}</div>`;
-    }
-
-    html += `</div>`;
-    html += `<button class="btn btn-outline" style="margin-top:8px;" onclick="copyMeta()">COPY ALL TO CLIPBOARD</button>`;
-    html += `<div id="copy-confirm" style="display:none; font-family: 'Space Mono'; font-size:11px; color:var(--aqua); margin-top:8px;">✓ Copied!</div>`;
+    variations.forEach((v, i) => {
+      const titleM = v.match(/TITLE:\s*(.+)/);
+      const descM = v.match(/DESC:\s*(.+)/);
+      const charM = v.match(/CHARS:\s*(.+)/);
+      if (titleM || descM) {
+        html += `<div class="meta-card">
+          <div class="meta-var-label">Variation ${i+1}</div>
+          ${titleM ? `<div class="meta-row"><div class="meta-row-label">TITLE TAG</div><div class="meta-row-val">${titleM[1].trim()}</div></div>` : ''}
+          ${descM ? `<div class="meta-row"><div class="meta-row-label">META DESCRIPTION</div><div class="meta-row-val">${descM[1].trim()}</div></div>` : ''}
+          ${charM ? `<div class="meta-chars">${charM[1].trim()}</div>` : ''}
+        </div>`;
+      }
+    });
+    if (!html) html = `<div class="result-block">${text}</div>`;
+    html += `<button class="btn btn-outline" style="margin-top:4px;" onclick="copyAll()">Copy All to Clipboard</button>
+             <span id="copyConfirm" style="display:none; font-family:'Space Mono'; font-size:11px; color:var(--aqua); margin-left:12px;">✓ Copied!</span>`;
     return html;
   }
 
-  function copyMeta() {
-    const el = document.getElementById('meta-results');
-    const text = el.innerText;
+  function copyAll() {
+    const text = document.getElementById('meta-results').innerText;
     navigator.clipboard.writeText(text).then(() => {
-      const confirm = document.getElementById('copy-confirm');
-      if (confirm) { confirm.style.display = 'block'; setTimeout(() => confirm.style.display = 'none', 2000); }
+      const el = document.getElementById('copyConfirm');
+      if (el) { el.style.display = 'inline'; setTimeout(() => el.style.display = 'none', 2000); }
     });
   }
 </script>
