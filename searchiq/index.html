@@ -1013,10 +1013,12 @@
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      throw new Error(err.error || `API error ${res.status}`);
+      console.error('API Error Response:', err);
+      throw new Error(err.error || err.message || `API error ${res.status}`);
     }
 
     const data = await res.json();
+    console.log('API Success Response:', data);
     return data.content?.[0]?.text || '';
   }
 
@@ -1092,7 +1094,8 @@
       document.getElementById('globalLoading').classList.remove('visible');
       document.getElementById('analyzeBtn').disabled = false;
       document.getElementById('workspace').style.display = 'block';
-      document.getElementById('auditContent').innerHTML = `<div class="error-block">⚠ ${e.message}<br><br>Make sure your API key is set correctly in the script.</div>`;
+      console.error('Analysis error:', e);
+      document.getElementById('auditContent').innerHTML = `<div class="error-block">⚠ ${e.message}<br><br>Please try again or contact support if the issue persists.</div>`;
       document.getElementById('workspace').style.display = 'block';
     }
   }
