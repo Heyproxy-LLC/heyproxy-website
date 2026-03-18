@@ -1,9 +1,4 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-
-export default async function handler(
-  req: VercelRequest,
-  res: VercelResponse
-) {
+module.exports = async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -21,14 +16,14 @@ export default async function handler(
 
   // Get API key from environment variable
   const apiKey = process.env.ANTHROPIC_API_KEY;
-
+  
   console.log('API Key exists:', !!apiKey);
   console.log('API Key length:', apiKey?.length || 0);
-
+  
   if (!apiKey) {
     console.error('ANTHROPIC_API_KEY environment variable is not set');
-    return res.status(500).json({
-      error: 'Server configuration error: API key not configured'
+    return res.status(500).json({ 
+      error: 'Server configuration error: API key not configured' 
     });
   }
 
@@ -62,25 +57,25 @@ export default async function handler(
     if (!response.ok) {
       const errorData = await response.text();
       console.error('Anthropic API error:', errorData);
-      return res.status(response.status).json({
+      return res.status(response.status).json({ 
         error: 'Failed to get response from Claude API',
-        details: errorData
+        details: errorData 
       });
     }
 
     const data = await response.json();
     console.log('Anthropic API success');
-
+    
     // Return the response
     return res.status(200).json(data);
 
   } catch (error) {
     console.error('Error calling Claude API:', error);
-    return res.status(500).json({
+    return res.status(500).json({ 
       error: 'Internal server error',
       message: error instanceof Error ? error.message : 'Unknown error',
       stack: error instanceof Error ? error.stack : undefined
     });
   }
-}
+};
 
