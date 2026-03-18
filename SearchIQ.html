@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SearchIQ — AI SEO Toolkit by Heyproxy</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --aqua: #00ffff;
+    --aqua-dim: rgba(0,255,255,0.12);
+    --aqua-glow: rgba(0,255,255,0.4);
+    --dark: #0a0a0a;
+    --dark-2: #111111;
+    --dark-3: #1a1a1a;
+    --dark-4: #222222;
+    --text: #e8e8e8;
+    --text-dim: #888;
+    --border: rgba(0,255,255,0.15);
+    --radius: 4px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(0,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  header {
+    padding: 28px 0 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo-icon {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+  }
+
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+
+  .brand-name {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--aqua);
+    letter-spacing: -0.5px;
+  }
+
+  .brand-sub {
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 3px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .header-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--aqua);
+    border: 1px solid var(--border);
+    padding: 5px 10px;
+    letter-spacing: 1px;
+    background: var(--aqua-dim);
+  }
+
+  /* Hero */
+  .hero {
+    margin-bottom: 56px;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 span {
+    color: var(--aqua);
+    position: relative;
+  }
+
+  .hero p {
+    color: var(--text-dim);
+    font-size: 16px;
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+    overflow-x: auto;
+  }
+
+  .tab {
+    padding: 14px 28px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    position: relative;
+    bottom: -1px;
+  }
+
+  .tab:hover { color: var(--text); }
+
+  .tab.active {
+    color: var(--aqua);
+    border-bottom-color: var(--aqua);
+  }
+
+  /* Panels */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Card */
+  .card {
+    background: var(--dark-2);
+    border: 1px solid var(--border);
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+
+  .card-title {
+    font-size: 13px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--aqua);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-title::before {
+    content: '';
+    display: block;
+    width: 6px;
+    height: 6px;
+    background: var(--aqua);
+    border-radius: 50%;
+  }
+
+  /* Form elements */
+  label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  input[type="text"], textarea, select {
+    width: 100%;
+    background: var(--dark-3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    padding: 12px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+    border-radius: var(--radius);
+  }
+
+  input[type="text"]:focus,
+  textarea:focus,
+  select:focus {
+    border-color: var(--aqua);
+    box-shadow: 0 0 0 2px var(--aqua-dim);
+  }
+
+  textarea { resize: vertical; min-height: 100px; line-height: 1.5; }
+
+  .form-row {
+    margin-bottom: 20px;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+
+  /* Button */
+  .btn {
+    background: var(--aqua);
+    color: var(--dark);
+    border: none;
+    padding: 14px 32px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: var(--radius);
+  }
+
+  .btn:hover {
+    background: #fff;
+    box-shadow: 0 0 20px var(--aqua-glow);
+  }
+
+  .btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--aqua);
+    border: 1px solid var(--aqua);
+  }
+
+  .btn-outline:hover {
+    background: var(--aqua-dim);
+    color: var(--aqua);
+    box-shadow: 0 0 16px var(--aqua-glow);
+  }
+
+  /* Results */
+  .results {
+    display: none;
+    margin-top: 24px;
+    animation: fadeIn 0.4s ease;
+  }
+
+  .results.visible { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .result-block {
+    background: var(--dark-3);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--aqua);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    color: var(--text);
+  }
+
+  .result-block h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    color: var(--aqua);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    font-weight: 700;
+  }
+
+  /* Score bar */
+  .score-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 10px;
+  }
+
+  .score-label {
+    width: 180px;
+    font-size: 11px;
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
+
+  .score-bar-wrap {
+    flex: 1;
+    height: 6px;
+    background: var(--dark-4);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .score-bar-fill {
+    height: 100%;
+    background: var(--aqua);
+    border-radius: 3px;
+    transition: width 0.8s ease;
+  }
+
+  .score-val {
+    font-size: 11px;
+    color: var(--aqua);
+    width: 36px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* Loading */
+  .loading {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--aqua);
+  }
+
+  .loading.visible { display: flex; }
+
+  .spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--border);
+    border-top-color: var(--aqua);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Tags */
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .tag {
+    background: var(--aqua-dim);
+    color: var(--aqua);
+    border: 1px solid var(--border);
+    padding: 4px 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    border-radius: 2px;
+  }
+
+  /* Divider */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 28px 0;
+  }
+
+  /* Footer */
+  footer {
+    margin-top: 80px;
+    padding: 28px 0;
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .footer-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+  }
+
+  .footer-text a {
+    color: var(--aqua);
+    text-decoration: none;
+  }
+
+  .footer-text a:hover { text-decoration: underline; }
+
+  /* Streaming text */
+  .stream-text { white-space: pre-wrap; }
+
+  /* API key notice */
+  .api-notice {
+    background: var(--dark-3);
+    border: 1px solid rgba(255,200,0,0.2);
+    border-left: 3px solid #ffc800;
+    padding: 14px 20px;
+    margin-bottom: 32px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: #ffc800;
+    line-height: 1.7;
+  }
+
+  .error-block {
+    background: var(--dark-3);
+    border: 1px solid rgba(255,80,80,0.3);
+    border-left: 3px solid #ff5050;
+    padding: 16px 20px;
+    margin-top: 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: #ff5050;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <div class="header-inner">
+      <div class="logo-area">
+        <!-- Heyproxy SVG logo inline -->
+        <svg class="logo-icon" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+          <circle fill="#00ffff" cx="250" cy="250" r="250"/>
+          <path fill="#222" stroke="aqua" stroke-miterlimit="10" stroke-width="2" d="M94.51,213.64c10.43,0,19.11,7.19,21.96,16.92l96.57,13.33c.7-1.8,1.45-3.59,2.15-5.39l-83.25-74.96c-3.59,2.54-7.93,3.95-12.23,3.95-12.62,0-22.71-10.08-22.71-22.71s10.08-22.71,22.71-22.71,22.71,10.08,22.71,22.71c0,2.54-.7,5.04-1.45,7.58l83.25,73.87c5.39-4.69,12.23-7.58,20.56-8.64l-1.1-46.86c-8.99-3.24-15.47-11.53-15.47-21.61,0-12.62,10.08-22.71,22.71-22.71s22.71,10.08,22.71,22.71c0,9.73-6.49,18.37-15.12,21.26l1.1,47.56c4.34,1.1,8.29,2.54,11.88,4.69l65.58-96.22c-2.54-3.59-3.95-7.93-3.95-12.98,0-12.62,10.08-22.71,22.71-22.71s22.71,10.08,22.71,22.71-10.43,22.71-22.71,22.71c-2.54,0-4.69-.35-6.84-1.1l-66.37,97.32c6.14,9.38,6.84,16.57,6.84,27.05l98.02,30.64c3.95-5.39,10.43-8.99,18.02-8.99,12.62,0,22.71,10.08,22.71,22.71s-10.08,22.71-22.71,22.71-22.71-10.08-22.71-22.71l-96.57-30.25c-3.59,9.38-10.78,16.22-20.52,19.46l21.61,51.9c12.98,0,23.76,9.38,23.76,22.71,0,12.62-10.43,22.71-22.71,22.71s-22.71-10.08-22.71-22.71c0-6.84,3.24-13.33,8.29-17.67l-23.06-54.49c-6.84,0-12.62-1.1-18.02-3.59l-74.57,82.5c2.15,3.59,3.59,7.93,3.59,12.23,0,12.62-10.08,22.71-22.71,22.71s-22.71-10.08-22.71-22.71,10.08-22.71,22.71-22.71c2.89,0,5.39.35,7.93,1.45l73.87-82.15c-5.79-6.14-9.03-14.77-9.38-24.86l-96.18-13.33c-3.59,8.29-11.53,14.07-20.91,14.07-12.62,0-22.71-10.43-22.71-22.71,0-12.62,10.08-22.71,22.71-22.71h0ZM250.53,274.88c11.18,0,18.37-7.58,18.37-18.37s-7.19-18.37-18.37-18.37-18.37,7.19-18.37,18.37,7.54,18.37,18.37,18.37Z"/>
+        </svg>
+        <div class="brand-text">
+          <span class="brand-name">SearchIQ</span>
+          <span class="brand-sub">by Heyproxy</span>
+        </div>
+      </div>
+      <div class="header-badge">AI SEO TOOLKIT v1.0</div>
+    </div>
+  </header>
+
+  <div class="hero">
+    <h1>SEO Intelligence<br>for the <span>AI Era</span></h1>
+    <p>Keyword analysis, technical audits, and meta generation — all powered by Claude AI. Built for 2026 search.</p>
+  </div>
+
+  <div class="api-notice">
+    ⚡ This tool uses the Anthropic API. Make sure you're running this via a server or local environment that has API access configured, or paste your API key below to get started.
+    <div style="margin-top:10px; display:flex; gap:10px; align-items:center;">
+      <input type="password" id="apiKeyInput" placeholder="sk-ant-..." style="flex:1; font-size:11px; padding:8px 12px;">
+      <button class="btn btn-outline" style="padding:8px 16px; font-size:10px;" onclick="saveKey()">SAVE KEY</button>
+    </div>
+    <div id="keyStatus" style="margin-top:6px; font-size:10px; color: #888;"></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('keyword', this)">Keyword Analyzer</button>
+    <button class="tab" onclick="switchTab('audit', this)">SEO Auditor</button>
+    <button class="tab" onclick="switchTab('meta', this)">Meta Generator</button>
+  </div>
+
+  <!-- KEYWORD ANALYZER -->
+  <div class="panel active" id="panel-keyword">
+    <div class="card">
+      <div class="card-title">Keyword Analyzer</div>
+      <div class="form-row">
+        <label>Target Keyword or Phrase</label>
+        <input type="text" id="kw-input" placeholder="e.g. technical SEO for WordPress 2026">
+      </div>
+      <div class="form-grid">
+        <div class="form-row">
+          <label>Industry / Niche</label>
+          <input type="text" id="kw-industry" placeholder="e.g. web development, e-commerce">
+        </div>
+        <div class="form-row">
+          <label>Target Audience</label>
+          <input type="text" id="kw-audience" placeholder="e.g. small business owners">
+        </div>
+      </div>
+      <button class="btn" onclick="analyzeKeyword()">
+        <span>Analyze Keyword</span>
+      </button>
+    </div>
+
+    <div class="loading" id="kw-loading">
+      <div class="spinner"></div>
+      <span>Analyzing keyword signals...</span>
+    </div>
+    <div class="results" id="kw-results"></div>
+  </div>
+
+  <!-- SEO AUDITOR -->
+  <div class="panel" id="panel-audit">
+    <div class="card">
+      <div class="card-title">Technical SEO Auditor</div>
+      <div class="form-row">
+        <label>Website URL</label>
+        <input type="text" id="audit-url" placeholder="https://yourdomain.com">
+      </div>
+      <div class="form-row">
+        <label>Describe Your Website (type, content, platform)</label>
+        <textarea id="audit-desc" placeholder="e.g. WordPress blog about digital marketing, using Elementor, mostly written content with some product pages..."></textarea>
+      </div>
+      <div class="form-row">
+        <label>Primary Keywords You're Targeting</label>
+        <input type="text" id="audit-keywords" placeholder="e.g. SEO services, web design PA">
+      </div>
+      <button class="btn" onclick="runAudit()">
+        <span>Run SEO Audit</span>
+      </button>
+    </div>
+
+    <div class="loading" id="audit-loading">
+      <div class="spinner"></div>
+      <span>Running technical audit...</span>
+    </div>
+    <div class="results" id="audit-results"></div>
+  </div>
+
+  <!-- META GENERATOR -->
+  <div class="panel" id="panel-meta">
+    <div class="card">
+      <div class="card-title">Meta Title & Description Generator</div>
+      <div class="form-row">
+        <label>Page Topic / Content Summary</label>
+        <textarea id="meta-topic" placeholder="Describe what this page is about..."></textarea>
+      </div>
+      <div class="form-grid">
+        <div class="form-row">
+          <label>Primary Keyword</label>
+          <input type="text" id="meta-keyword" placeholder="e.g. technical SEO guide">
+        </div>
+        <div class="form-row">
+          <label>Brand / Company Name</label>
+          <input type="text" id="meta-brand" placeholder="e.g. Heyproxy">
+        </div>
+      </div>
+      <div class="form-row">
+        <label>How Many Variations?</label>
+        <select id="meta-count">
+          <option value="3">3 variations</option>
+          <option value="5" selected>5 variations</option>
+          <option value="10">10 variations</option>
+        </select>
+      </div>
+      <button class="btn" onclick="generateMeta()">
+        <span>Generate Meta Tags</span>
+      </button>
+    </div>
+
+    <div class="loading" id="meta-loading">
+      <div class="spinner"></div>
+      <span>Generating meta variations...</span>
+    </div>
+    <div class="results" id="meta-results"></div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-text">
+      SearchIQ is powered by <a href="https://heyproxy.io" target="_blank">Heyproxy.io</a> — Technical SEO & Hosting for the AI Era &nbsp;·&nbsp; 2026
+    </div>
+  </div>
+</footer>
+
+<script>
+  let apiKey = localStorage.getItem('searchiq_api_key') || '';
+
+  function saveKey() {
+    const val = document.getElementById('apiKeyInput').value.trim();
+    if (val) {
+      apiKey = val;
+      localStorage.setItem('searchiq_api_key', val);
+      document.getElementById('keyStatus').textContent = '✓ API key saved for this session.';
+      document.getElementById('keyStatus').style.color = '#00ffff';
+    }
+  }
+
+  if (apiKey) {
+    document.getElementById('apiKeyInput').value = apiKey;
+    document.getElementById('keyStatus').textContent = '✓ API key loaded.';
+    document.getElementById('keyStatus').style.color = '#00ffff';
+  }
+
+  function switchTab(name, el) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('panel-' + name).classList.add('active');
+  }
+
+  async function callClaude(prompt) {
+    const key = apiKey || document.getElementById('apiKeyInput').value.trim();
+    if (!key) throw new Error('No API key. Please enter your Anthropic API key above.');
+
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1500,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error?.message || `API error ${res.status}`);
+    }
+
+    const data = await res.json();
+    return data.content?.[0]?.text || '';
+  }
+
+  function showError(containerId, msg) {
+    const el = document.getElementById(containerId);
+    el.classList.add('visible');
+    el.innerHTML = `<div class="error-block">⚠ ${msg}</div>`;
+  }
+
+  // ── KEYWORD ANALYZER ──
+  async function analyzeKeyword() {
+    const kw = document.getElementById('kw-input').value.trim();
+    const industry = document.getElementById('kw-industry').value.trim();
+    const audience = document.getElementById('kw-audience').value.trim();
+    if (!kw) return alert('Please enter a keyword.');
+
+    const loading = document.getElementById('kw-loading');
+    const results = document.getElementById('kw-results');
+    loading.classList.add('visible');
+    results.classList.remove('visible');
+    results.innerHTML = '';
+
+    const prompt = `You are an expert SEO strategist in 2026. Analyze this keyword for SEO potential.
+
+Keyword: "${kw}"
+Industry: ${industry || 'general'}
+Target audience: ${audience || 'general'}
+
+Return your analysis in this EXACT format — use these exact section headers:
+
+SEARCH INTENT
+[Explain the primary search intent: informational / navigational / transactional / commercial. 2-3 sentences.]
+
+COMPETITION LEVEL
+[Rate as: Low / Medium / High / Very High. Explain why in 2 sentences.]
+
+AI OVERVIEW LIKELIHOOD
+[Rate likelihood this keyword triggers a Google AI Overview: Low / Medium / High. Explain in 2 sentences.]
+
+DIFFICULTY SCORE
+[Give a score out of 100 and brief explanation. Format: XX/100 — explanation]
+
+RECOMMENDED STRATEGY
+[3-4 sentences on how to approach ranking for this keyword in 2026, considering AI search.]
+
+LSI & RELATED KEYWORDS
+[List 8-10 related keywords or phrases, one per line, each starting with a dash]
+
+CONTENT RECOMMENDATIONS
+[3 specific content ideas that could rank for this keyword. Numbered list.]`;
+
+    try {
+      const text = await callClaude(prompt);
+      loading.classList.remove('visible');
+      results.classList.add('visible');
+      results.innerHTML = renderKeywordResults(text);
+    } catch (e) {
+      loading.classList.remove('visible');
+      showError('kw-results', e.message);
+    }
+  }
+
+  function renderKeywordResults(text) {
+    const sections = [
+      'SEARCH INTENT', 'COMPETITION LEVEL', 'AI OVERVIEW LIKELIHOOD',
+      'DIFFICULTY SCORE', 'RECOMMENDED STRATEGY', 'LSI & RELATED KEYWORDS', 'CONTENT RECOMMENDATIONS'
+    ];
+
+    let html = '';
+    sections.forEach(section => {
+      const regex = new RegExp(`${section}\\s*\\n([\\s\\S]*?)(?=${sections.filter(s=>s!==section).join('|')}|$)`);
+      const match = text.match(regex);
+      if (match) {
+        const content = match[1].trim();
+        if (section === 'LSI & RELATED KEYWORDS') {
+          const tags = content.split('\n').map(l => l.replace(/^[-•]\s*/, '').trim()).filter(Boolean);
+          html += `<div class="result-block"><h3>${section}</h3><div class="tag-list">${tags.map(t => `<span class="tag">${t}</span>`).join('')}</div></div>`;
+        } else {
+          html += `<div class="result-block"><h3>${section}</h3>${content}</div>`;
+        }
+      }
+    });
+
+    return html || `<div class="result-block"><h3>Analysis</h3>${text}</div>`;
+  }
+
+  // ── SEO AUDITOR ──
+  async function runAudit() {
+    const url = document.getElementById('audit-url').value.trim();
+    const desc = document.getElementById('audit-desc').value.trim();
+    const keywords = document.getElementById('audit-keywords').value.trim();
+    if (!url) return alert('Please enter a URL.');
+
+    const loading = document.getElementById('audit-loading');
+    const results = document.getElementById('audit-results');
+    loading.classList.add('visible');
+    results.classList.remove('visible');
+    results.innerHTML = '';
+
+    const prompt = `You are a senior technical SEO auditor in 2026. Perform a comprehensive SEO audit based on the information provided.
+
+URL: ${url}
+Site description: ${desc || 'Not provided'}
+Target keywords: ${keywords || 'Not provided'}
+
+Provide a detailed SEO audit covering these exact sections:
+
+OVERALL SEO SCORE
+[Give an overall score out of 100 based on what you can infer. Format: XX/100 with a brief summary.]
+
+TECHNICAL CHECKLIST
+[For each item, mark as ✓ PASS, ✗ FAIL, or ⚠ REVIEW NEEDED based on what you can infer from the URL and description. Cover: HTTPS/SSL, Mobile Responsiveness, Page Speed Signals, XML Sitemap, Robots.txt, Canonical Tags, Structured Data/Schema, Core Web Vitals readiness, URL Structure]
+
+ON-PAGE SEO
+[Score out of 100 and specific recommendations for: Title Tags, Meta Descriptions, Header Structure (H1-H3), Keyword Placement, Internal Linking, Image Alt Text]
+
+E-E-A-T SIGNALS (2026)
+[Assess Experience, Expertise, Authoritativeness, Trustworthiness signals. Score each out of 10 and explain.]
+
+AI OVERVIEW READINESS
+[How well is this site positioned to be cited in Google AI Overviews? Score out of 10 with specific recommendations.]
+
+TOP 5 PRIORITY FIXES
+[List the 5 most impactful changes to make immediately, numbered, with brief explanation of each.]
+
+QUICK WINS
+[3 things that can be implemented in under 1 hour for immediate SEO improvement.]`;
+
+    try {
+      const text = await callClaude(prompt);
+      loading.classList.remove('visible');
+      results.classList.add('visible');
+      results.innerHTML = renderAuditResults(text);
+    } catch (e) {
+      loading.classList.remove('visible');
+      showError('audit-results', e.message);
+    }
+  }
+
+  function renderAuditResults(text) {
+    const sections = [
+      'OVERALL SEO SCORE', 'TECHNICAL CHECKLIST', 'ON-PAGE SEO',
+      'E-E-A-T SIGNALS (2026)', 'AI OVERVIEW READINESS', 'TOP 5 PRIORITY FIXES', 'QUICK WINS'
+    ];
+
+    let html = '';
+    for (let i = 0; i < sections.length; i++) {
+      const section = sections[i];
+      const nextSection = sections[i + 1];
+      const regex = nextSection
+        ? new RegExp(`${section.replace('(', '\\(').replace(')', '\\)')}\\s*\\n([\\s\\S]*?)(?=${nextSection.replace('(', '\\(').replace(')', '\\)')})`)
+        : new RegExp(`${section.replace('(', '\\(').replace(')', '\\)')}\\s*\\n([\\s\\S]*?)$`);
+      const match = text.match(regex);
+      if (match) {
+        html += `<div class="result-block"><h3>${section}</h3>${match[1].trim()}</div>`;
+      }
+    }
+
+    return html || `<div class="result-block"><h3>Audit Results</h3>${text}</div>`;
+  }
+
+  // ── META GENERATOR ──
+  async function generateMeta() {
+    const topic = document.getElementById('meta-topic').value.trim();
+    const keyword = document.getElementById('meta-keyword').value.trim();
+    const brand = document.getElementById('meta-brand').value.trim();
+    const count = document.getElementById('meta-count').value;
+    if (!topic) return alert('Please describe the page topic.');
+
+    const loading = document.getElementById('meta-loading');
+    const results = document.getElementById('meta-results');
+    loading.classList.add('visible');
+    results.classList.remove('visible');
+    results.innerHTML = '';
+
+    const prompt = `You are an expert SEO copywriter in 2026. Generate ${count} meta title and description variations.
+
+Page topic: ${topic}
+Primary keyword: ${keyword || 'not specified'}
+Brand name: ${brand || 'not specified'}
+
+Rules:
+- Meta titles: 50-60 characters max, include keyword naturally
+- Meta descriptions: 140-160 characters max, compelling, include CTA
+- Vary the style across variations (question, statement, benefit-led, urgency, etc.)
+- Format optimized for 2026 search including AI Overview consideration
+
+Format EXACTLY like this for each variation:
+
+VARIATION 1
+Title: [title here]
+Description: [description here]
+Character count: Title: XX | Description: XX
+
+VARIATION 2
+Title: [title here]
+Description: [description here]
+Character count: Title: XX | Description: XX
+
+[continue for all ${count} variations]`;
+
+    try {
+      const text = await callClaude(prompt);
+      loading.classList.remove('visible');
+      results.classList.add('visible');
+      results.innerHTML = renderMetaResults(text, count);
+    } catch (e) {
+      loading.classList.remove('visible');
+      showError('meta-results', e.message);
+    }
+  }
+
+  function renderMetaResults(text, count) {
+    let html = `<div class="result-block"><h3>Generated Meta Tags — ${count} Variations</h3>`;
+    
+    const variations = text.split(/VARIATION \d+/).filter(v => v.trim());
+    if (variations.length > 0) {
+      variations.forEach((v, i) => {
+        const titleMatch = v.match(/Title:\s*(.+)/);
+        const descMatch = v.match(/Description:\s*(.+)/);
+        const charMatch = v.match(/Character count:\s*(.+)/);
+        if (titleMatch || descMatch) {
+          html += `<div style="border-top: 1px solid rgba(0,255,255,0.1); padding-top: 16px; margin-top: 16px;">`;
+          html += `<div style="color: var(--aqua); font-size: 10px; letter-spacing: 2px; margin-bottom: 8px;">VARIATION ${i+1}</div>`;
+          if (titleMatch) html += `<div style="margin-bottom:6px;"><span style="color:var(--text-dim)">TITLE: </span>${titleMatch[1].trim()}</div>`;
+          if (descMatch) html += `<div style="margin-bottom:6px;"><span style="color:var(--text-dim)">DESC: </span>${descMatch[1].trim()}</div>`;
+          if (charMatch) html += `<div style="color:var(--text-dim); font-size:10px;">${charMatch[1].trim()}</div>`;
+          html += `</div>`;
+        }
+      });
+    } else {
+      html += `<div style="white-space:pre-wrap">${text}</div>`;
+    }
+
+    html += `</div>`;
+    html += `<button class="btn btn-outline" style="margin-top:8px;" onclick="copyMeta()">COPY ALL TO CLIPBOARD</button>`;
+    html += `<div id="copy-confirm" style="display:none; font-family: 'Space Mono'; font-size:11px; color:var(--aqua); margin-top:8px;">✓ Copied!</div>`;
+    return html;
+  }
+
+  function copyMeta() {
+    const el = document.getElementById('meta-results');
+    const text = el.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      const confirm = document.getElementById('copy-confirm');
+      if (confirm) { confirm.style.display = 'block'; setTimeout(() => confirm.style.display = 'none', 2000); }
+    });
+  }
+</script>
+</body>
+</html>
