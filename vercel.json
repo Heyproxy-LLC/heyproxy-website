@@ -4,58 +4,12 @@
   "installCommand": "npm install",
   "rewrites": [
     {
-      "source": "/",
+      "source": "/:path*",
       "destination": "/SearchIQ.html",
       "has": [
         {
           "type": "host",
           "value": "searchiq.heyproxy.io"
-        }
-      ]
-    }
-  ],
-  "redirects": [
-    {
-      "source": "/SearchIQ.html",
-      "destination": "/",
-      "permanent": false,
-      "has": [
-        {
-          "type": "host",
-          "value": "heyproxy.io"
-        }
-      ]
-    },
-    {
-      "source": "/SearchIQ.html",
-      "destination": "/",
-      "permanent": false,
-      "has": [
-        {
-          "type": "host",
-          "value": "www.heyproxy.io"
-        }
-      ]
-    },
-    {
-      "source": "/SearchIQ",
-      "destination": "/",
-      "permanent": false,
-      "has": [
-        {
-          "type": "host",
-          "value": "heyproxy.io"
-        }
-      ]
-    },
-    {
-      "source": "/SearchIQ",
-      "destination": "/",
-      "permanent": false,
-      "has": [
-        {
-          "type": "host",
-          "value": "www.heyproxy.io"
         }
       ]
     }
