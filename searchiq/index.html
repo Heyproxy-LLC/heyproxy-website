@@ -11,18 +11,25 @@
 <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700;800;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
+    --cyan: #00ffff;
+    --cyan-glow: rgba(0, 255, 255, 0.5);
+    --dark: #000000;
+    --dark-elevated: #0a0a0a;
+    --dark-card: #111111;
+    --text-primary: #ffffff;
+    --text-secondary: #888888;
+    --text-tertiary: #555555;
+    --border: rgba(255, 255, 255, 0.1);
     --aqua: #00ffff;
     --aqua-dim: rgba(0,255,255,0.08);
     --aqua-mid: rgba(0,255,255,0.2);
     --aqua-glow: rgba(0,255,255,0.35);
-    --dark: #080808;
     --dark-2: #0f0f0f;
     --dark-3: #161616;
     --dark-4: #1e1e1e;
     --text: #ececec;
     --text-dim: #666;
     --text-mid: #999;
-    --border: rgba(0,255,255,0.12);
     --border-dim: rgba(255,255,255,0.06);
     --yellow: #ffc800;
     --red: #ff4f4f;
@@ -32,11 +39,14 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    background: var(--dark);
-    color: var(--text);
+    background-color: var(--dark);
+    color: var(--text-primary);
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
     min-height: 100vh;
     overflow-x: hidden;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body::before {
@@ -44,9 +54,11 @@
     position: fixed;
     inset: 0;
     background-image:
-      linear-gradient(rgba(0,255,255,0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,255,255,0.025) 1px, transparent 1px);
-    background-size: 48px 48px;
+      linear-gradient(rgba(0, 255, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
     pointer-events: none;
     z-index: 0;
   }
@@ -70,9 +82,9 @@
     justify-content: space-between;
     align-items: center;
     padding: 2rem 4rem;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border);
+    border-bottom: none;
     transition: all 0.3s ease;
   }
 
