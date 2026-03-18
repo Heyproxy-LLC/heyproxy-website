@@ -49,26 +49,25 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(0, 255, 255, 0.15) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 255, 255, 0.15) 1px, transparent 1px);
-    background-size: 50px 50px;
-    mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
-    pointer-events: none;
-    z-index: 1;
-  }
-
   .wrap {
     max-width: 900px;
     margin: 0 auto;
     padding: 120px 24px 80px;
     position: relative;
-    z-index: 2;
+  }
+
+  .wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0, 255, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
   }
 
   /* ── HEADER ── */
@@ -127,6 +126,8 @@
   .hero {
     text-align: center;
     margin-bottom: 48px;
+    position: relative;
+    z-index: 1;
   }
 
   .hero-eyebrow {
@@ -167,6 +168,7 @@
     padding: 32px;
     margin-bottom: 48px;
     position: relative;
+    z-index: 1;
   }
 
   .domain-card::before {
@@ -307,7 +309,11 @@
   .loading-step.done { opacity: 0.5; }
 
   /* ── RESULTS WORKSPACE ── */
-  #workspace { display: none; }
+  #workspace {
+    display: none;
+    position: relative;
+    z-index: 1;
+  }
   #workspace.visible { display: block; }
 
   .workspace-header {
