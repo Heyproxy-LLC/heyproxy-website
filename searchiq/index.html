@@ -34,6 +34,8 @@
     --yellow: #ffc800;
     --red: #ff4f4f;
     --green: #00ff88;
+    --gradient-1: linear-gradient(135deg, var(--aqua) 0%, #0080ff 100%);
+    --gradient-2: linear-gradient(135deg, #00ffff 0%, #00ff88 100%);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -49,11 +51,66 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* Ambient Background */
+  .ambient-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .gradient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.15;
+    animation: float 20s ease-in-out infinite;
+  }
+
+  .orb-1 {
+    width: 600px;
+    height: 600px;
+    background: var(--gradient-1);
+    top: -200px;
+    right: -200px;
+    animation-delay: 0s;
+  }
+
+  .orb-2 {
+    width: 500px;
+    height: 500px;
+    background: var(--gradient-2);
+    bottom: -150px;
+    left: -150px;
+    animation-delay: 7s;
+  }
+
+  .orb-3 {
+    width: 400px;
+    height: 400px;
+    background: var(--cyan-glow);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: 14s;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -30px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+  }
+
   .wrap {
     max-width: 900px;
     margin: 0 auto;
     padding: 120px 24px 80px;
     position: relative;
+    z-index: 1;
   }
 
   .wrap::before {
@@ -787,6 +844,13 @@
 </style>
 </head>
 <body>
+<!-- Ambient Background -->
+<div class="ambient-bg">
+  <div class="gradient-orb orb-1"></div>
+  <div class="gradient-orb orb-2"></div>
+  <div class="gradient-orb orb-3"></div>
+</div>
+
 <div class="wrap">
 
   <!-- HEADER -->
