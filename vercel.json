@@ -1,6 +1,30 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": ".",
-  "installCommand": "npm install"
+  "installCommand": "npm install",
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/SearchIQ.html",
+      "has": [
+        {
+          "type": "host",
+          "value": "searchiq.heyproxy.io"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/SearchIQ.html",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/SearchIQ",
+      "destination": "/",
+      "permanent": false
+    }
+  ]
 }
 
