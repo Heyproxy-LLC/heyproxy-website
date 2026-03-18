@@ -922,6 +922,9 @@
       <button class="tab" id="tab-meta" onclick="switchTab('meta', this)">
         <span class="tab-dot"></span>Meta Generator
       </button>
+      <button class="tab" id="tab-security" onclick="switchTab('security', this)">
+        <span class="tab-dot"></span>Security Audit
+      </button>
     </div>
 
     <!-- AUDIT PANEL -->
@@ -977,6 +980,51 @@
           <span>Generating meta variations...</span>
         </div>
         <div class="tool-results" id="meta-results"></div>
+      </div>
+    </div>
+
+    <!-- SECURITY PANEL -->
+    <div class="panel" id="panel-security">
+      <div class="sub-tool">
+
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:20px; flex-wrap:wrap; margin-bottom:6px;">
+          <div>
+            <div class="sub-tool-title">Security Audit</div>
+            <div class="sub-tool-desc">
+              AI-powered security risk analysis for <span id="sec-domain-display" style="color:var(--aqua);">your site</span>.
+              Covers secrets exposure, browser key management, headers, CMS vulnerabilities, and more.
+              Results are inference-based — we recommend pairing with a live scanner for full coverage.
+            </div>
+          </div>
+          <button class="btn" style="white-space:nowrap; flex-shrink:0;" onclick="runSecurityAudit()">Run Security Audit</button>
+        </div>
+
+        <!-- Disclaimer -->
+        <div style="
+          background: rgba(255,200,0,0.04);
+          border: 1px solid rgba(255,200,0,0.15);
+          border-left: 3px solid var(--yellow);
+          padding: 12px 16px;
+          font-family: 'Poppins', monospace;
+          font-size: 11px;
+          color: var(--yellow);
+          line-height: 1.7;
+          margin-bottom: 20px;
+        ">
+          ⚠ This is an AI inference audit, not a live penetration test.
+          It identifies common risk patterns based on your domain and likely stack.
+          For production sites, always validate findings with tools like
+          <a href="https://securityheaders.com" target="_blank" style="color:var(--yellow);">securityheaders.com</a> and
+          <a href="https://observatory.mozilla.org" target="_blank" style="color:var(--yellow);">Mozilla Observatory</a>.
+        </div>
+
+        <div class="tool-loading" id="sec-loading">
+          <div class="spinner"></div>
+          <span>Scanning for security risk signals...</span>
+        </div>
+
+        <div class="tool-results" id="sec-results"></div>
+
       </div>
     </div>
 
@@ -1403,6 +1451,185 @@ CHARS: Title: XX | Desc: XX
       const el = document.getElementById('copyConfirm');
       if (el) { el.style.display = 'inline'; setTimeout(() => el.style.display = 'none', 2000); }
     });
+  }
+
+  // ── SECURITY AUDIT ──
+  async function runSecurityAudit() {
+    if (!currentDomain) return alert('Please run a site analysis first.');
+
+    // Update the domain display in the panel
+    const domEl = document.getElementById('sec-domain-display');
+    if (domEl) domEl.textContent = currentDomain;
+
+    const loading = document.getElementById('sec-loading');
+    const results = document.getElementById('sec-results');
+    loading.classList.add('visible');
+    results.classList.remove('visible');
+    results.innerHTML = '';
+
+    try {
+      const text = await callClaude(`You are a senior web security analyst in 2026. Perform a security risk audit for this website.
+
+Domain: ${currentDomain}
+
+Based on the domain, infer the likely tech stack, CMS, and hosting environment. Be specific and actionable.
+
+IMPORTANT: Respond in this EXACT format with these exact section headers:
+
+SECURITY SCORE
+[Single number 0-100 only]
+
+SCORE SUMMARY
+[One sentence — e.g. "Several critical exposure risks detected with no evidence of security headers."]
+
+SCORE DETAIL
+[2-3 sentences on overall security posture.]
+
+SECRETS & KEY EXPOSURE
+[List each item on its own line as: STATUS | Risk Name | Brief explanation
+STATUS = PASS, FAIL, or WARN
+Cover: API keys in client-side code, .env file exposure, hardcoded credentials, public GitHub repo leaks, browser storage of sensitive tokens, exposed admin endpoints]
+
+SECURITY HEADERS
+[List each item on its own line as: STATUS | Header Name | Brief explanation
+STATUS = PASS, FAIL, or WARN
+Cover: Content-Security-Policy, Strict-Transport-Security (HSTS), X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, CORS configuration]
+
+CMS & PLATFORM RISKS
+[List each item on its own line as: STATUS | Risk Name | Brief explanation
+STATUS = PASS, FAIL, or WARN
+Cover risks specific to the inferred CMS/stack — e.g. WordPress plugin vulnerabilities, exposed wp-admin, outdated dependencies, Vercel/Next.js misconfigurations, exposed API routes]
+
+SSL & TRANSPORT
+[List each item on its own line as: STATUS | Check Name | Brief explanation
+STATUS = PASS, FAIL, or WARN
+Cover: SSL certificate validity, HTTPS redirect, mixed content, TLS version, HSTS preload]
+
+TOP SECURITY RISKS
+[Exactly 5 items. Format each as:
+RISK: Short title
+SEVERITY: Critical / High / Medium / Low
+FIX: One sentence on how to resolve]
+
+RECOMMENDED TOOLS
+[3-5 free tools the site owner should run immediately. Format as:
+• Tool Name — URL — What it checks]`, 2000);
+
+      loading.classList.remove('visible');
+      results.classList.add('visible');
+      results.innerHTML = renderSecurityResults(text);
+      document.getElementById('tab-security').classList.add('done');
+    } catch(e) {
+      loading.classList.remove('visible');
+      results.classList.add('visible');
+      console.error('Security audit error:', e);
+      results.innerHTML = `<div class="error-block">⚠ ${e.message}<br><br>Please try again or contact support if the issue persists.</div>`;
+    }
+  }
+
+  function renderSecurityResults(text) {
+    const get = (section, next) => {
+      const escaped = section.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const nextEscaped = next ? next.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') : null;
+      const pattern = nextEscaped
+        ? new RegExp(`${escaped}\\s*\\n([\\s\\S]*?)(?=\\n${nextEscaped})`)
+        : new RegExp(`${escaped}\\s*\\n([\\s\\S]*?)$`);
+      const m = text.match(pattern);
+      return m ? m[1].trim() : '';
+    };
+
+    const score     = parseInt(get('SECURITY SCORE', 'SCORE SUMMARY')) || 0;
+    const summary   = get('SCORE SUMMARY', 'SCORE DETAIL');
+    const detail    = get('SCORE DETAIL', 'SECRETS & KEY EXPOSURE');
+    const secrets   = get('SECRETS & KEY EXPOSURE', 'SECURITY HEADERS');
+    const headers   = get('SECURITY HEADERS', 'CMS & PLATFORM RISKS');
+    const cms       = get('CMS & PLATFORM RISKS', 'SSL & TRANSPORT');
+    const ssl       = get('SSL & TRANSPORT', 'TOP SECURITY RISKS');
+    const risks     = get('TOP SECURITY RISKS', 'RECOMMENDED TOOLS');
+    const tools     = get('RECOMMENDED TOOLS', null);
+
+    // Score color — inverted logic for security (lower = worse)
+    const scoreColor = score >= 70 ? 'var(--green)' : score >= 45 ? 'var(--yellow)' : 'var(--red)';
+
+    let html = '';
+
+    // Score overview
+    html += `
+      <div class="score-overview" style="margin-bottom:24px;">
+        <div class="score-circle" style="border-color:${scoreColor}; box-shadow: 0 0 24px ${scoreColor}40;">
+          <div class="score-num" style="color:${scoreColor}">${score}</div>
+          <div class="score-denom">/ 100</div>
+        </div>
+        <div class="score-summary">
+          <h2>${summary || 'Security Audit Complete'}</h2>
+          <p style="font-size:14px; color:var(--text-mid); line-height:1.7;">${detail}</p>
+        </div>
+      </div>`;
+
+    // Helper: render checklist section
+    function renderChecklist(raw, sectionTitle) {
+      const lines = raw.split('\n').filter(l => l.includes('|'));
+      if (!lines.length) return `<div class="result-section"><div class="result-section-title">${sectionTitle}</div><div class="result-block">${raw}</div></div>`;
+      let out = `<div class="result-section"><div class="result-section-title">${sectionTitle}</div>`;
+      out += `<div class="result-block" style="padding: 8px 24px;">`;
+      lines.forEach(line => {
+        const parts = line.split('|').map(p => p.trim());
+        if (parts.length >= 2) {
+          const status = parts[0].toUpperCase();
+          const label  = parts[1] || '';
+          const note   = parts[2] || '';
+          const icon   = status === 'PASS' ? '✓' : status === 'FAIL' ? '✗' : '⚠';
+          const cls    = status === 'PASS' ? 'check-pass' : status === 'FAIL' ? 'check-fail' : 'check-warn';
+          out += `<div class="check-item">
+            <span class="check-icon ${cls}">${icon}</span>
+            <div>
+              <div class="check-label">${label}</div>
+              ${note ? `<div class="check-note">${note}</div>` : ''}
+            </div>
+          </div>`;
+        }
+      });
+      out += `</div></div>`;
+      return out;
+    }
+
+    html += renderChecklist(secrets, 'Secrets & Key Exposure');
+    html += renderChecklist(headers, 'Security Headers');
+    html += renderChecklist(cms,     'CMS & Platform Risks');
+    html += renderChecklist(ssl,     'SSL & Transport');
+
+    // Top security risks
+    html += `<div class="result-section"><div class="result-section-title">Top Security Risks</div>`;
+    html += `<div class="result-block" style="padding: 8px 24px;">`;
+    const riskBlocks = risks.split(/RISK:/).filter(r => r.trim());
+    riskBlocks.forEach((block, i) => {
+      const severityMatch = block.match(/SEVERITY:\s*(.+)/);
+      const fixMatch      = block.match(/FIX:\s*(.+)/s);
+      const title         = block.split('\n')[0].trim();
+      const severity      = severityMatch ? severityMatch[1].trim() : '';
+      const fix           = fixMatch ? fixMatch[1].trim() : '';
+      const sevColor      = severity === 'Critical' ? 'var(--red)'
+                          : severity === 'High'     ? '#ff8c00'
+                          : severity === 'Medium'   ? 'var(--yellow)'
+                          : 'var(--green)';
+      html += `<div class="fix-item">
+        <div class="fix-num">0${i+1}</div>
+        <div class="fix-content">
+          <div class="fix-title" style="display:flex; align-items:center; gap:10px;">
+            ${title}
+            ${severity ? `<span style="font-size:10px; font-family:'Poppins',monospace; letter-spacing:1px; color:${sevColor}; border:1px solid ${sevColor}40; padding:2px 8px; font-weight:600;">${severity.toUpperCase()}</span>` : ''}
+          </div>
+          ${fix ? `<div class="fix-desc">→ ${fix}</div>` : ''}
+        </div>
+      </div>`;
+    });
+    html += `</div></div>`;
+
+    // Recommended tools
+    html += `<div class="result-section"><div class="result-section-title">Recommended Tools to Run Now</div>`;
+    html += `<div class="result-block">${tools}</div></div>`;
+
+    return html;
   }
 </script>
 </body>
