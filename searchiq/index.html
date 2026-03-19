@@ -1168,9 +1168,57 @@
     }
   }
 
+  // ── FETCH PAGESPEED DATA (Real Core Web Vitals) ──
+  async function fetchPageSpeedData(domain) {
+    try {
+      const url = domain.startsWith('http') ? domain : `https://${domain}`;
+      const response = await fetch('/api/pagespeed', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+      });
+
+      if (!response.ok) {
+        console.error('PageSpeed API failed:', response.status);
+        return null;
+      }
+
+      const data = await response.json();
+      return data.pageSpeedData;
+    } catch (error) {
+      console.error('fetchPageSpeedData error:', error);
+      return null;
+    }
+  }
+
+  // ── FETCH SSL DATA (Real SSL/TLS Grade) ──
+  async function fetchSSLData(domain) {
+    try {
+      const response = await fetch('/api/ssl-check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ domain })
+      });
+
+      if (!response.ok) {
+        console.error('SSL API failed:', response.status);
+        return null;
+      }
+
+      const data = await response.json();
+      return data.sslData;
+    } catch (error) {
+      console.error('fetchSSLData error:', error);
+      return null;
+    }
+  }
+
   async function runAuditCall(domain) {
-    // Fetch real site intelligence
-    const intel = await fetchSiteIntelligence(domain);
+    // Fetch real site intelligence AND PageSpeed data in parallel
+    const [intel, pageSpeed] = await Promise.all([
+      fetchSiteIntelligence(domain),
+      fetchPageSpeedData(domain)
+    ]);
 
     let intelContext = '';
     if (intel) {
@@ -1196,6 +1244,34 @@ INTELLIGENCE REPORT (Real Data Fetched):
   * Title: ${intel.metaInfo.title || 'N/A'}
   * Generator: ${intel.metaInfo.generator || 'N/A'}
   * Exposed Key Signals: ${intel.metaInfo.exposedKeySignals || 'None detected'}
+`;
+    }
+
+    // Add PageSpeed data if available
+    if (pageSpeed) {
+      intelContext += `
+
+PAGESPEED INSIGHTS (Real Google Data):
+Mobile Performance:
+  * Performance Score: ${pageSpeed.mobile.performanceScore}/100
+  * Accessibility Score: ${pageSpeed.mobile.accessibilityScore}/100
+  * Best Practices Score: ${pageSpeed.mobile.bestPracticesScore}/100
+  * SEO Score: ${pageSpeed.mobile.seoScore}/100
+  * First Contentful Paint (FCP): ${pageSpeed.mobile.fcp}
+  * Largest Contentful Paint (LCP): ${pageSpeed.mobile.lcp}
+  * Cumulative Layout Shift (CLS): ${pageSpeed.mobile.cls}
+  * Total Blocking Time (TBT): ${pageSpeed.mobile.tbt}
+  * Speed Index: ${pageSpeed.mobile.si}
+
+Desktop Performance:
+  * Performance Score: ${pageSpeed.desktop.performanceScore}/100
+  * Accessibility Score: ${pageSpeed.desktop.accessibilityScore}/100
+  * Best Practices Score: ${pageSpeed.desktop.bestPracticesScore}/100
+  * SEO Score: ${pageSpeed.desktop.seoScore}/100
+  * First Contentful Paint (FCP): ${pageSpeed.desktop.fcp}
+  * Largest Contentful Paint (LCP): ${pageSpeed.desktop.lcp}
+  * Cumulative Layout Shift (CLS): ${pageSpeed.desktop.cls}
+  * Total Blocking Time (TBT): ${pageSpeed.desktop.tbt}
 `;
     }
 
@@ -1507,8 +1583,11 @@ CHARS: Title: XX | Desc: XX
     results.innerHTML = '';
 
     try {
-      // Fetch real site intelligence
-      const intel = await fetchSiteIntelligence(currentDomain);
+      // Fetch real site intelligence AND SSL data in parallel
+      const [intel, sslData] = await Promise.all([
+        fetchSiteIntelligence(currentDomain),
+        fetchSSLData(currentDomain)
+      ]);
 
       let intelContext = '';
       if (intel) {
@@ -1547,6 +1626,38 @@ INTELLIGENCE REPORT (Real Data Fetched):
   * Exposed Key Signals in HTML: ${intel.metaInfo.exposedKeySignals || 'None detected'}
 - Sitemap: ${intel.hasSitemap ? 'Found' : 'Missing'}
 - Robots.txt: ${intel.robotsTxt ? 'Found' : 'Missing'}
+`;
+      }
+
+      // Add SSL Labs data if available
+      if (sslData && !sslData.error && !sslData.inProgress) {
+        intelContext += `
+
+SSL/TLS ANALYSIS (Real SSL Labs Data):
+- SSL Grade: ${sslData.grade || 'N/A'}
+- Certificate Issuer: ${sslData.certIssuer || 'N/A'}
+- Certificate Expiry: ${sslData.certExpiry ? new Date(sslData.certExpiry).toLocaleDateString() : 'N/A'}
+- TLS 1.3 Support: ${sslData.supportsTLS13 ? 'YES' : 'NO'}
+- HTTP/2 Support: ${sslData.supportsHTTP2 ? 'YES' : 'NO'}
+- Old TLS Versions (1.0/1.1): ${sslData.supportsOldTLS ? 'ENABLED — CRITICAL' : 'Disabled'}
+- Forward Secrecy: ${sslData.forwardSecrecy || 'N/A'}
+- HSTS Preload: ${sslData.hstsPreload ? 'YES' : 'NO'}
+- HSTS Max Age: ${sslData.hstsMaxAge ? sslData.hstsMaxAge + ' seconds' : 'Not set'}
+- Vulnerabilities:
+  * Heartbleed: ${sslData.vulnerableToHeartbleed ? 'VULNERABLE — CRITICAL' : 'Not vulnerable'}
+  * POODLE: ${sslData.vulnerableToPoodle ? 'VULNERABLE — HIGH' : 'Not vulnerable'}
+  * BEAST: ${sslData.vulnerableToBeast ? 'VULNERABLE — MEDIUM' : 'Not vulnerable'}
+  * FREAK: ${sslData.vulnerableToFreak ? 'VULNERABLE — HIGH' : 'Not vulnerable'}
+`;
+      } else if (sslData && sslData.inProgress) {
+        intelContext += `
+
+SSL/TLS ANALYSIS: Scan in progress (can take up to 2 minutes). Grade not available yet.
+`;
+      } else if (sslData && sslData.error) {
+        intelContext += `
+
+SSL/TLS ANALYSIS: ${sslData.error}
 `;
       }
 
