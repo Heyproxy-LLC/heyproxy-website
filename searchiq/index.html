@@ -1613,6 +1613,7 @@ INTELLIGENCE REPORT (Real Data Fetched):
   * CSP: ${intel.securityHeaders.csp || 'null'}
   * HSTS: ${intel.securityHeaders.hsts || 'null'}
   * X-Frame-Options: ${intel.securityHeaders.xFrameOptions || 'null'}
+  * CSP frame-ancestors: ${intel.securityHeaders.frameAncestors || 'null'}
   * X-Content-Type-Options: ${intel.securityHeaders.xContentType || 'null'}
   * Referrer-Policy: ${intel.securityHeaders.referrerPolicy || 'null'}
   * Permissions-Policy: ${intel.securityHeaders.permissionsPolicy || 'null'}
@@ -1683,6 +1684,7 @@ CRITICAL INSTRUCTIONS:
 2. DO NOT infer or assume technologies that are not listed in "Detected Stack". If WordPress is not in the detected stack, DO NOT mention WordPress.
 3. DO NOT flag files as exposed if they show "Not accessible" in the Exposed Files section.
 4. ONLY analyze what is explicitly stated in the intelligence report above.
+5. CLICKJACKING PROTECTION: Can be achieved via EITHER X-Frame-Options header (legacy) OR CSP frame-ancestors directive (modern, preferred). If frame-ancestors is set, the site IS protected even if X-Frame-Options is missing.
 
 IMPORTANT: Respond in this EXACT format with these exact section headers:
 

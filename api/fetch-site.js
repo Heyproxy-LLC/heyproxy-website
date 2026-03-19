@@ -82,10 +82,19 @@ function detectStack(html, headers) {
 }
 
 function checkSecurityHeaders(headers) {
+  // Extract frame-ancestors from CSP (modern clickjacking protection)
+  let frameAncestors = null;
+  const csp = headers['content-security-policy'];
+  if (csp) {
+    const match = csp.match(/frame-ancestors\s+([^;]+)/);
+    if (match) frameAncestors = match[1].trim();
+  }
+
   return {
     csp: headers['content-security-policy'] || null,
     hsts: headers['strict-transport-security'] || null,
     xFrameOptions: headers['x-frame-options'] || null,
+    frameAncestors: frameAncestors, // Modern CSP-based clickjacking protection
     xContentType: headers['x-content-type-options'] || null,
     referrerPolicy: headers['referrer-policy'] || null,
     permissionsPolicy: headers['permissions-policy'] || headers['feature-policy'] || null,
