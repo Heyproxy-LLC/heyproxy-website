@@ -1464,7 +1464,15 @@ Based on the domain, infer the likely tech stack, CMS, and hosting environment. 
 IMPORTANT: Respond in this EXACT format with these exact section headers:
 
 SECURITY SCORE
-[Single number 0-100 only]
+[Single number 0-100. Be strict — scoring rubric:
+Start at 100. Deduct:
+- 20 points per CRITICAL risk
+- 12 points per HIGH risk
+- 6 points per MEDIUM/WARN item
+- 3 points per LOW risk
+A site with any CRITICAL issue cannot score above 60.
+A site with 2+ CRITICAL issues cannot score above 40.
+Output the single number only.]
 
 SCORE SUMMARY
 [One sentence — e.g. "Several critical exposure risks detected with no evidence of security headers."]
@@ -1535,8 +1543,8 @@ RECOMMENDED TOOLS
     const risks     = get('TOP SECURITY RISKS', 'RECOMMENDED TOOLS');
     const tools     = get('RECOMMENDED TOOLS', null);
 
-    // Score color — inverted logic for security (lower = worse)
-    const scoreColor = score >= 70 ? 'var(--green)' : score >= 45 ? 'var(--yellow)' : 'var(--red)';
+    // Score color — strict thresholds for security (80+ green, 60+ yellow, else red)
+    const scoreColor = score >= 80 ? 'var(--green)' : score >= 60 ? 'var(--yellow)' : 'var(--red)';
 
     let html = '';
 
