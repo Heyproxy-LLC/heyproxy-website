@@ -114,12 +114,45 @@ async function checkExposedFiles(baseUrl) {
 
   const results = {};
 
+  // First, get the main page HTML to detect SPA fallback pattern
+  let mainPageHtml = '';
+  try {
+    const mainRes = await fetchWithTimeout(baseUrl);
+    mainPageHtml = await mainRes.text();
+  } catch {
+    // If we can't fetch main page, skip SPA detection
+  }
+
   await Promise.allSettled(
     sensitiveFiles.map(async ({ path, key }) => {
       try {
-        const res = await fetchWithTimeout(baseUrl + path, { method: 'HEAD' });
-        // 200 = exposed, 403 = exists but protected, 404 = not found
-        results[key] = res.status === 200;
+        const res = await fetchWithTimeout(baseUrl + path, { method: 'GET' });
+
+        // If not 200, definitely not exposed
+        if (res.status !== 200) {
+          results[key] = false;
+          return;
+        }
+
+        // For 200 responses, check if it's actually the file or SPA fallback
+        const content = await res.text();
+
+        // If response is HTML and matches the main page (SPA fallback), it's NOT exposed
+        if (content.includes('<!DOCTYPE html>') && mainPageHtml && content === mainPageHtml) {
+          results[key] = false;
+          return;
+        }
+
+        // If it's HTML with <div id="root"> or similar SPA markers, likely fallback
+        if (content.includes('<div id="root">') ||
+            content.includes('<div id="app">') ||
+            content.includes('__NEXT_DATA__')) {
+          results[key] = false;
+          return;
+        }
+
+        // Otherwise, it's likely actually exposed
+        results[key] = true;
       } catch {
         results[key] = false;
       }
