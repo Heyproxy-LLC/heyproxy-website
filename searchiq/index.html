@@ -1213,6 +1213,50 @@
     }
   }
 
+  // ── FETCH MOZILLA OBSERVATORY DATA ──
+  async function fetchObservatoryData(domain) {
+    try {
+      const cleanDomain = domain.replace(/^https?:\/\//, '');
+      const response = await fetch(`/api/mozilla-observatory?domain=${encodeURIComponent(cleanDomain)}`);
+
+      if (!response.ok) {
+        console.error('Observatory API failed:', response.status);
+        return null;
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('fetchObservatoryData error:', error);
+      return null;
+    }
+  }
+
+  // ── FETCH CSP EVALUATOR DATA ──
+  async function fetchCSPData(domain) {
+    try {
+      // First get the site intelligence to extract CSP
+      const intel = await fetchSiteIntelligence(domain);
+      if (!intel || !intel.securityHeaders || !intel.securityHeaders.csp) {
+        return { hasCsp: false, message: 'No CSP header found' };
+      }
+
+      const csp = intel.securityHeaders.csp;
+      const response = await fetch(`/api/csp-evaluator?csp=${encodeURIComponent(csp)}`);
+
+      if (!response.ok) {
+        console.error('CSP Evaluator API failed:', response.status);
+        return null;
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('fetchCSPData error:', error);
+      return null;
+    }
+  }
+
   async function runAuditCall(domain) {
     // Fetch real site intelligence AND PageSpeed data in parallel
     const [intel, pageSpeed] = await Promise.all([
@@ -1426,29 +1470,64 @@ QUICK WINS
     results.innerHTML = '';
 
     try {
-      const text = await callClaude(`You are an expert SEO strategist in 2026. Analyze this keyword.
+      // Fetch real keyword data from DataForSEO
+      console.log('🔍 [Keyword Analyzer] Fetching real keyword data for:', kw);
+
+      const [keywordData, relatedData] = await Promise.all([
+        fetch(`/api/keyword-data?keyword=${encodeURIComponent(kw)}`).then(r => r.json()).catch(() => null),
+        fetch(`/api/related-keywords?keyword=${encodeURIComponent(kw)}&limit=10`).then(r => r.json()).catch(() => null)
+      ]);
+
+      console.log('🔍 [Keyword Analyzer] Keyword data:', keywordData);
+      console.log('🔍 [Keyword Analyzer] Related data:', relatedData);
+
+      // Build context with real data
+      let dataContext = '';
+      if (keywordData && !keywordData.error && !keywordData.configured === false) {
+        dataContext = `
+
+REAL KEYWORD DATA (from DataForSEO):
+- Search Volume: ${keywordData.searchVolume?.toLocaleString() || 'N/A'} searches/month
+- Competition Index: ${keywordData.competitionIndex || 'N/A'}/100
+- Competition Level: ${keywordData.competition || 'N/A'}
+- CPC (Cost Per Click): $${keywordData.cpc || '0.00'}
+- Top of Page Bid Range: $${keywordData.lowTopOfPageBid || '0'} - $${keywordData.highTopOfPageBid || '0'}
+`;
+      }
+
+      if (relatedData && !relatedData.error && relatedData.relatedKeywords) {
+        dataContext += `
+REAL RELATED KEYWORDS (with search volume):
+${relatedData.relatedKeywords.map(k => `- "${k.keyword}" (${k.searchVolume?.toLocaleString() || 0}/mo, Competition: ${k.competitionIndex}/100)`).join('\n')}
+`;
+      }
+
+      const text = await callClaude(`You are an expert SEO strategist in 2026. Analyze this keyword using the REAL DATA provided.
 
 Keyword: "${kw}"
 Website context: ${currentDomain || 'general'}
 Industry: ${industry || 'not specified'}
+${dataContext}
+
+${dataContext ? 'USE THE REAL KEYWORD DATA ABOVE to inform your analysis. This is actual search volume and competition data from Google.' : 'Note: Real keyword data not available. Provide analysis based on SEO expertise.'}
 
 SEARCH INTENT
 [Informational / Navigational / Transactional / Commercial — explain in 2 sentences]
 
 COMPETITION LEVEL
-[Low / Medium / High / Very High — explain why in 2 sentences]
+[Low / Medium / High / Very High — ${dataContext ? 'based on the competition index above' : 'explain why'} in 2 sentences]
 
 AI OVERVIEW LIKELIHOOD
 [Low / Medium / High — explain in 2 sentences]
 
 DIFFICULTY SCORE
-[XX/100 — brief explanation]
+[XX/100 — ${dataContext ? 'consider the search volume and competition data above' : 'brief explanation'}]
 
 RECOMMENDED STRATEGY
 [3-4 sentences on ranking approach for this keyword in 2026 AI search landscape]
 
 RELATED KEYWORDS
-[8 related keywords, one per line, dash prefix]
+[${dataContext ? 'Use the real related keywords listed above, formatted as bullet points' : '8 related keywords, one per line, dash prefix'}]
 
 CONTENT IDEAS
 [3 specific content pieces that could rank. Numbered.]`);
@@ -1585,16 +1664,20 @@ CHARS: Title: XX | Desc: XX
     results.innerHTML = '';
 
     try {
-      console.log('🔒 [Security Audit] Fetching intelligence and SSL data for:', currentDomain);
+      console.log('🔒 [Security Audit] Fetching intelligence, SSL, Observatory, and CSP data for:', currentDomain);
 
-      // Fetch real site intelligence AND SSL data in parallel
-      const [intel, sslData] = await Promise.all([
+      // Fetch all security data in parallel
+      const [intel, sslData, observatoryData, cspData] = await Promise.all([
         fetchSiteIntelligence(currentDomain),
-        fetchSSLData(currentDomain)
+        fetchSSLData(currentDomain),
+        fetchObservatoryData(currentDomain),
+        fetchCSPData(currentDomain)
       ]);
 
       console.log('🔒 [Security Audit] Intelligence data:', intel ? 'Received' : 'Failed');
       console.log('🔒 [Security Audit] SSL data:', sslData ? 'Received' : 'Failed');
+      console.log('🔒 [Security Audit] Observatory data:', observatoryData ? 'Received' : 'Failed');
+      console.log('🔒 [Security Audit] CSP data:', cspData ? 'Received' : 'Failed');
 
       if (intel) {
         console.log('🔒 [Security Audit] Detected Stack:', intel.detectedStack);
@@ -1671,6 +1754,53 @@ SSL/TLS ANALYSIS: Scan in progress (can take up to 2 minutes). Grade not availab
         intelContext += `
 
 SSL/TLS ANALYSIS: ${sslData.error}
+`;
+      }
+
+      // Add Mozilla Observatory data if available
+      if (observatoryData && !observatoryData.error && !observatoryData.inProgress) {
+        intelContext += `
+
+MOZILLA OBSERVATORY ANALYSIS (Industry-Standard Security Benchmark):
+- Observatory Grade: ${observatoryData.grade || 'N/A'}
+- Observatory Score: ${observatoryData.score || 'N/A'}/100
+- Tests Passed: ${observatoryData.testsPassed || 0}/${observatoryData.testsQuantity || 0}
+- Risk Likelihood: ${observatoryData.likelihood || 'N/A'}
+`;
+      } else if (observatoryData && observatoryData.inProgress) {
+        intelContext += `
+
+MOZILLA OBSERVATORY ANALYSIS: Scan in progress (can take up to 60 seconds).
+`;
+      } else if (observatoryData && observatoryData.error) {
+        intelContext += `
+
+MOZILLA OBSERVATORY ANALYSIS: ${observatoryData.error}
+`;
+      }
+
+      // Add CSP Evaluator data if available
+      if (cspData && cspData.hasCsp && !cspData.error) {
+        intelContext += `
+
+CSP EVALUATOR ANALYSIS (Google's CSP Analyzer):
+- CSP Score: ${cspData.score || 'N/A'}/100
+- CSP Grade: ${cspData.grade || 'N/A'}
+- Total Findings: ${cspData.summary?.total || 0}
+- High Severity Issues: ${cspData.summary?.high || 0}
+- Medium Severity Issues: ${cspData.summary?.medium || 0}
+- Syntax Issues: ${cspData.summary?.syntax || 0}
+`;
+        if (cspData.findings && cspData.findings.length > 0) {
+          intelContext += `- Key CSP Weaknesses:\n`;
+          cspData.findings.slice(0, 5).forEach(f => {
+            intelContext += `  * [${f.severity.toUpperCase()}] ${f.directive}: ${f.description}\n`;
+          });
+        }
+      } else if (cspData && !cspData.hasCsp) {
+        intelContext += `
+
+CSP EVALUATOR ANALYSIS: No Content-Security-Policy header found.
 `;
       }
 
