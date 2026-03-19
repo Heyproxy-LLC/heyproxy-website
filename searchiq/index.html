@@ -1147,12 +1147,64 @@
     }
   }
 
+  // ── FETCH SITE INTELLIGENCE (Real Web Fetching) ──
+  async function fetchSiteIntelligence(domain) {
+    try {
+      const response = await fetch('/api/fetch-site', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ domain })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch site data: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.siteIntelligence;
+    } catch (error) {
+      console.error('fetchSiteIntelligence error:', error);
+      return null;
+    }
+  }
+
   async function runAuditCall(domain) {
+    // Fetch real site intelligence
+    const intel = await fetchSiteIntelligence(domain);
+
+    let intelContext = '';
+    if (intel) {
+      intelContext = `
+
+INTELLIGENCE REPORT (Real Data Fetched):
+- Detected Stack: ${intel.detectedStack.join(', ') || 'Unknown'}
+- HTTP Status: ${intel.httpStatusCode}
+- HTTPS Redirect: ${intel.redirectedToHttps ? 'Yes' : 'No'}
+- Security Headers:
+  * CSP: ${intel.securityHeaders.csp || 'MISSING'}
+  * HSTS: ${intel.securityHeaders.hsts || 'MISSING'}
+  * X-Frame-Options: ${intel.securityHeaders.xFrameOptions || 'MISSING'}
+  * X-Content-Type-Options: ${intel.securityHeaders.xContentType || 'MISSING'}
+  * Referrer-Policy: ${intel.securityHeaders.referrerPolicy || 'MISSING'}
+- Exposed Files:
+  * .env: ${intel.exposedFiles.dotenv ? 'EXPOSED ⚠' : 'Not found'}
+  * .git/config: ${intel.exposedFiles.gitConfig ? 'EXPOSED ⚠' : 'Not found'}
+  * wp-config.php: ${intel.exposedFiles.wpConfig ? 'EXPOSED ⚠' : 'Not found'}
+  * /admin: ${intel.exposedFiles.adminEndpoint ? 'ACCESSIBLE ⚠' : 'Not found'}
+- Sitemap: ${intel.hasSitemap ? 'Found' : 'Missing'}
+- Meta Info:
+  * Title: ${intel.metaInfo.title || 'N/A'}
+  * Generator: ${intel.metaInfo.generator || 'N/A'}
+  * Exposed Key Signals: ${intel.metaInfo.exposedKeySignals || 'None detected'}
+`;
+    }
+
     return await callClaude(`You are a senior technical SEO auditor in 2026. Perform a comprehensive SEO audit for this website.
 
 Domain: ${domain}
+${intelContext}
 
-Based on the domain name, infer what type of business/website this likely is and audit accordingly. Be specific and actionable.
+Use the INTELLIGENCE REPORT above (real fetched data) to inform your audit. Be specific and actionable based on what was actually detected.
 
 Respond in this EXACT format with these exact section headers — nothing before OVERALL SCORE:
 
@@ -1455,11 +1507,55 @@ CHARS: Title: XX | Desc: XX
     results.innerHTML = '';
 
     try {
+      // Fetch real site intelligence
+      const intel = await fetchSiteIntelligence(currentDomain);
+
+      let intelContext = '';
+      if (intel) {
+        intelContext = `
+
+INTELLIGENCE REPORT (Real Data Fetched):
+- Detected Stack: ${intel.detectedStack.join(', ') || 'Unknown'}
+- HTTP Status: ${intel.httpStatusCode}
+- HTTPS Redirect: ${intel.redirectedToHttps ? 'YES' : 'NO — CRITICAL ISSUE'}
+- Security Headers (null = MISSING):
+  * CSP: ${intel.securityHeaders.csp || 'null'}
+  * HSTS: ${intel.securityHeaders.hsts || 'null'}
+  * X-Frame-Options: ${intel.securityHeaders.xFrameOptions || 'null'}
+  * X-Content-Type-Options: ${intel.securityHeaders.xContentType || 'null'}
+  * Referrer-Policy: ${intel.securityHeaders.referrerPolicy || 'null'}
+  * Permissions-Policy: ${intel.securityHeaders.permissionsPolicy || 'null'}
+  * CORS: ${intel.securityHeaders.cors || 'null'}
+  * X-XSS-Protection: ${intel.securityHeaders.xXssProtection || 'null'}
+  * Server Header: ${intel.securityHeaders.server || 'null'} ${intel.securityHeaders.server ? '(info leakage)' : ''}
+  * X-Powered-By: ${intel.securityHeaders.xPoweredBy || 'null'} ${intel.securityHeaders.xPoweredBy ? '(info leakage)' : ''}
+- Exposed Files (true = CRITICAL):
+  * .env: ${intel.exposedFiles.dotenv ? 'EXPOSED — CRITICAL' : 'Not accessible'}
+  * .git/config: ${intel.exposedFiles.gitConfig ? 'EXPOSED — CRITICAL' : 'Not accessible'}
+  * wp-config.php: ${intel.exposedFiles.wpConfig ? 'EXPOSED — CRITICAL' : 'Not accessible'}
+  * wp-login.php: ${intel.exposedFiles.wpLogin ? 'ACCESSIBLE' : 'Not found'}
+  * /admin: ${intel.exposedFiles.adminEndpoint ? 'ACCESSIBLE' : 'Not found'}
+  * /administrator: ${intel.exposedFiles.adminJoomla ? 'ACCESSIBLE' : 'Not found'}
+  * /api/config: ${intel.exposedFiles.apiConfig ? 'EXPOSED — HIGH RISK' : 'Not accessible'}
+  * /api/env: ${intel.exposedFiles.apiEnv ? 'EXPOSED — CRITICAL' : 'Not accessible'}
+  * phpinfo.php: ${intel.exposedFiles.phpinfo ? 'EXPOSED — HIGH RISK' : 'Not accessible'}
+  * .htaccess: ${intel.exposedFiles.htaccess ? 'EXPOSED' : 'Not accessible'}
+  * /server-status: ${intel.exposedFiles.serverStatus ? 'EXPOSED — HIGH RISK' : 'Not accessible'}
+- Meta Info:
+  * Title: ${intel.metaInfo.title || 'N/A'}
+  * Generator: ${intel.metaInfo.generator || 'N/A'}
+  * Exposed Key Signals in HTML: ${intel.metaInfo.exposedKeySignals || 'None detected'}
+- Sitemap: ${intel.hasSitemap ? 'Found' : 'Missing'}
+- Robots.txt: ${intel.robotsTxt ? 'Found' : 'Missing'}
+`;
+      }
+
       const text = await callClaude(`You are a senior web security analyst in 2026. Perform a security risk audit for this website.
 
 Domain: ${currentDomain}
+${intelContext}
 
-Based on the domain, infer the likely tech stack, CMS, and hosting environment. Be specific and actionable.
+USE THE INTELLIGENCE REPORT ABOVE (real fetched data) to inform your audit. This is NOT guesswork — these are actual HTTP responses, headers, and file probes.
 
 IMPORTANT: Respond in this EXACT format with these exact section headers:
 
@@ -1493,7 +1589,7 @@ Cover: Content-Security-Policy, Strict-Transport-Security (HSTS), X-Frame-Option
 CMS & PLATFORM RISKS
 [List each item on its own line as: STATUS | Risk Name | Brief explanation
 STATUS = PASS, FAIL, or WARN
-Cover risks specific to the inferred CMS/stack — e.g. WordPress plugin vulnerabilities, exposed wp-admin, outdated dependencies, Vercel/Next.js misconfigurations, exposed API routes]
+Cover risks specific to the detected CMS/stack from the intelligence report — e.g. WordPress plugin vulnerabilities, exposed wp-admin, outdated dependencies, Vercel/Next.js misconfigurations, exposed API routes]
 
 SSL & TRANSPORT
 [List each item on its own line as: STATUS | Check Name | Brief explanation
