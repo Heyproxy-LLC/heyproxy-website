@@ -24,46 +24,56 @@ function extractHeaders(headers) {
 
 function detectStack(html, headers) {
   const signals = [];
+  const htmlLower = html.toLowerCase();
 
-  // CMS detection
-  if (html.includes('wp-content') || html.includes('wp-includes')) signals.push('WordPress');
-  if (html.includes('Shopify') || html.includes('shopify')) signals.push('Shopify');
-  if (html.includes('__NEXT_DATA__')) signals.push('Next.js');
-  if (html.includes('nuxt') || html.includes('__NUXT__')) signals.push('Nuxt.js');
-  if (html.includes('gatsby')) signals.push('Gatsby');
-  if (html.includes('squarespace')) signals.push('Squarespace');
-  if (html.includes('wix.com')) signals.push('Wix');
-  if (html.includes('webflow')) signals.push('Webflow');
-  if (html.includes('ghost')) signals.push('Ghost');
-  if (html.includes('drupal')) signals.push('Drupal');
-  if (html.includes('joomla')) signals.push('Joomla');
+  // CMS detection - more specific patterns to avoid false positives
+  if ((htmlLower.includes('wp-content/') || htmlLower.includes('wp-includes/')) &&
+      (htmlLower.includes('wordpress') || htmlLower.includes('/wp-json/'))) {
+    signals.push('WordPress');
+  }
+  if (htmlLower.includes('cdn.shopify.com') || htmlLower.includes('shopify.com/s/files')) signals.push('Shopify');
+  if (html.includes('__NEXT_DATA__') || htmlLower.includes('_next/static')) signals.push('Next.js');
+  if (html.includes('__NUXT__') || htmlLower.includes('_nuxt/')) signals.push('Nuxt.js');
+  if (htmlLower.includes('gatsby')) signals.push('Gatsby');
+  if (htmlLower.includes('squarespace-cdn.com')) signals.push('Squarespace');
+  if (htmlLower.includes('wix.com') || htmlLower.includes('parastorage.com')) signals.push('Wix');
+  if (htmlLower.includes('webflow.com') || htmlLower.includes('webflow.io')) signals.push('Webflow');
+  if (htmlLower.includes('ghost.io') || htmlLower.includes('ghost.org')) signals.push('Ghost');
+  if (htmlLower.includes('/sites/all/') || htmlLower.includes('drupal')) signals.push('Drupal');
+  if (htmlLower.includes('joomla')) signals.push('Joomla');
 
-  // Web3 / blockchain signals
-  if (html.includes('hedera') || html.includes('hashgraph')) signals.push('Hedera/Hashgraph');
-  if (html.includes('ethereum') || html.includes('web3.js') || html.includes('ethers.js')) signals.push('Ethereum/Web3');
-  if (html.includes('solana')) signals.push('Solana');
-  if (html.includes('metamask') || html.includes('wagmi') || html.includes('rainbowkit')) signals.push('Web3 Wallet Integration');
-  if (html.includes('nft') || html.includes('NFT')) signals.push('NFT Project');
-  if (html.includes('opensea') || html.includes('thirdweb')) signals.push('NFT Marketplace Integration');
+  // Web3 / blockchain signals - case insensitive
+  if (htmlLower.includes('hedera') || htmlLower.includes('hashgraph')) signals.push('Hedera/Hashgraph');
+  if (htmlLower.includes('ethereum') || htmlLower.includes('web3.js') || htmlLower.includes('ethers.js')) signals.push('Ethereum/Web3');
+  if (htmlLower.includes('solana')) signals.push('Solana');
+  if (htmlLower.includes('metamask') || htmlLower.includes('wagmi') || htmlLower.includes('rainbowkit') ||
+      htmlLower.includes('walletconnect')) signals.push('Web3 Wallet Integration');
+  if (htmlLower.includes('nft')) signals.push('NFT Project');
+  if (htmlLower.includes('opensea') || htmlLower.includes('thirdweb')) signals.push('NFT Marketplace Integration');
 
-  // JS Frameworks
-  if (html.includes('react') || html.includes('React')) signals.push('React');
-  if (html.includes('vue') || html.includes('Vue')) signals.push('Vue.js');
-  if (html.includes('angular')) signals.push('Angular');
-  if (html.includes('svelte')) signals.push('Svelte');
+  // JS Frameworks - look for more specific signals
+  if (html.includes('<div id="root">') || html.includes('react') || html.includes('React')) signals.push('React');
+  if (htmlLower.includes('vue') || html.includes('Vue')) signals.push('Vue.js');
+  if (htmlLower.includes('angular')) signals.push('Angular');
+  if (htmlLower.includes('svelte')) signals.push('Svelte');
+
+  // Build tools
+  if (htmlLower.includes('/assets/index-') && htmlLower.includes('.js')) signals.push('Vite');
+  if (htmlLower.includes('webpack')) signals.push('Webpack');
 
   // Hosting signals from headers
-  const server = headers['server'] || '';
-  const xPoweredBy = headers['x-powered-by'] || '';
-  const via = headers['via'] || '';
+  const server = (headers['server'] || '').toLowerCase();
+  const xPoweredBy = (headers['x-powered-by'] || '').toLowerCase();
+  const via = (headers['via'] || '').toLowerCase();
 
   if (server.includes('cloudflare') || headers['cf-ray']) signals.push('Cloudflare');
   if (server.includes('vercel') || headers['x-vercel-id']) signals.push('Vercel');
   if (server.includes('netlify') || headers['x-nf-request-id']) signals.push('Netlify');
+  if (server.includes('railway') || headers['x-railway-edge'] || headers['x-railway-request-id']) signals.push('Railway');
   if (server.includes('nginx')) signals.push('Nginx');
   if (server.includes('apache')) signals.push('Apache');
-  if (xPoweredBy.includes('PHP')) signals.push(`PHP (${xPoweredBy})`);
-  if (xPoweredBy.includes('Next.js')) signals.push('Next.js (confirmed)');
+  if (xPoweredBy.includes('php')) signals.push(`PHP`);
+  if (xPoweredBy.includes('next.js')) signals.push('Next.js (confirmed)');
 
   // CDN signals
   if (headers['x-cache'] || via.includes('CloudFront')) signals.push('AWS CloudFront');
