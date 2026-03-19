@@ -24,12 +24,14 @@ module.exports = async function handler(req, res) {
       .toLowerCase()
       .trim();
 
+    console.log('🔒 [ssl-check] Analyzing SSL for domain:', cleanedDomain);
+
     // SSL Labs API endpoint (free, no API key needed)
     // fromCache=on means we'll accept cached results (faster)
     // all=done means we only want completed assessments
     const apiUrl = `https://api.ssllabs.com/api/v3/analyze?host=${encodeURIComponent(cleanedDomain)}&fromCache=on&all=done`;
 
-    console.log('Fetching SSL Labs data for:', cleanedDomain);
+    console.log('🔒 [ssl-check] Fetching SSL Labs data for:', cleanedDomain);
 
     const response = await fetch(apiUrl, {
       headers: {

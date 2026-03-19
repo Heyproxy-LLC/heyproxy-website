@@ -1572,6 +1572,8 @@ CHARS: Title: XX | Desc: XX
   async function runSecurityAudit() {
     if (!currentDomain) return alert('Please run a site analysis first.');
 
+    console.log('🔒 [Security Audit] Running for domain:', currentDomain);
+
     // Update the domain display in the panel
     const domEl = document.getElementById('sec-domain-display');
     if (domEl) domEl.textContent = currentDomain;
@@ -1583,11 +1585,16 @@ CHARS: Title: XX | Desc: XX
     results.innerHTML = '';
 
     try {
+      console.log('🔒 [Security Audit] Fetching intelligence and SSL data for:', currentDomain);
+
       // Fetch real site intelligence AND SSL data in parallel
       const [intel, sslData] = await Promise.all([
         fetchSiteIntelligence(currentDomain),
         fetchSSLData(currentDomain)
       ]);
+
+      console.log('🔒 [Security Audit] Intelligence data:', intel ? 'Received' : 'Failed');
+      console.log('🔒 [Security Audit] SSL data:', sslData ? 'Received' : 'Failed');
 
       let intelContext = '';
       if (intel) {

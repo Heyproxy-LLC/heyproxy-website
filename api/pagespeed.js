@@ -25,6 +25,8 @@ module.exports = async function handler(req, res) {
     // Clean the URL
     const cleanUrl = url.startsWith('http') ? url : `https://${url}`;
 
+    console.log('⚡ [pagespeed] Analyzing URL:', cleanUrl);
+
     // Fetch both mobile and desktop
     const [mobileRes, desktopRes] = await Promise.all([
       fetch(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(cleanUrl)}&strategy=mobile&key=${apiKey}&category=performance&category=accessibility&category=best-practices&category=seo`),

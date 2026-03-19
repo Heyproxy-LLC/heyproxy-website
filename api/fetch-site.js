@@ -185,6 +185,8 @@ module.exports = async function handler(req, res) {
 
   const baseUrl = `https://${cleanedDomain}`;
 
+  console.log('🔍 [fetch-site] Analyzing domain:', cleanedDomain);
+
   try {
     // ── 1. Fetch the main page ──
     let mainRes;
