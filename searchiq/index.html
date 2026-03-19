@@ -1596,6 +1596,11 @@ CHARS: Title: XX | Desc: XX
       console.log('🔒 [Security Audit] Intelligence data:', intel ? 'Received' : 'Failed');
       console.log('🔒 [Security Audit] SSL data:', sslData ? 'Received' : 'Failed');
 
+      if (intel) {
+        console.log('🔒 [Security Audit] Detected Stack:', intel.detectedStack);
+        console.log('🔒 [Security Audit] Exposed Files:', intel.exposedFiles);
+      }
+
       let intelContext = '';
       if (intel) {
         intelContext = `
@@ -1673,7 +1678,11 @@ SSL/TLS ANALYSIS: ${sslData.error}
 Domain: ${currentDomain}
 ${intelContext}
 
-USE THE INTELLIGENCE REPORT ABOVE (real fetched data) to inform your audit. This is NOT guesswork — these are actual HTTP responses, headers, and file probes.
+CRITICAL INSTRUCTIONS:
+1. USE ONLY THE INTELLIGENCE REPORT ABOVE (real fetched data) to inform your audit. This is NOT guesswork — these are actual HTTP responses, headers, and file probes.
+2. DO NOT infer or assume technologies that are not listed in "Detected Stack". If WordPress is not in the detected stack, DO NOT mention WordPress.
+3. DO NOT flag files as exposed if they show "Not accessible" in the Exposed Files section.
+4. ONLY analyze what is explicitly stated in the intelligence report above.
 
 IMPORTANT: Respond in this EXACT format with these exact section headers:
 
